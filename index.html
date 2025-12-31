@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Isle of Not Alone — Evan Bei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Isle of Not Alone — a place-driven body of musical work by Evan Bei." />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f7f7f5;
+      color: #111;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                   Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20vh 24px 10vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin-bottom: 0.2em;
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #555;
+      margin-top: 0;
+      margin-bottom: 3em;
+    }
+
+    .statement {
+      font-size: 1.1rem;
+      margin-bottom: 4em;
+      color: #222;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5em;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #111;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 1px;
+      background: #111;
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+
+    .nav a:hover::after {
+      transform: scaleX(1);
+    }
+
+    footer {
+      margin-top: 6em;
+      font-size: 0.8rem;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Isle of Not Alone</h1>
+    <h2>by Evan Bei</h2>
+
+    <div class="statement">
+      Sound as a temporal event shaped by place, distance, and listening.
+    </div>
+
+    <nav class="nav">
+      <a href="/sea/">Sea</a>
+      <a href="/eurasia/">Eurasia</a>
+      <a href="/north-london/">North London</a>
+      <a href="/night-shore/">Night Shore</a>
+      <a href="/map.html">Map</a>
+    </nav>
+
+    <footer>
+      © Evan Bei — Isle of Not Alone
+    </footer>
+  </div>
+</body>
+</html>
