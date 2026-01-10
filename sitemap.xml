@@ -22,21 +22,7 @@
     <priority>0.7</priority>
   </url>
 
-  <!-- 音乐 Works / Music 索引 -->
-  <url>
-    <loc>https://goldisle.org/music</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- 更新 / Updates (如果你保留了这类页面) -->
-  <url>
-    <loc>https://goldisle.org/updates</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- 四大 Region -->
+   <!-- 四大 Region -->
   <url>
     <loc>https://goldisle.org/sea</loc>
     <changefreq>monthly</changefreq>
