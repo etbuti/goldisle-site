@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- 主入口 -->
+  <url>
+    <loc>https://goldisle.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 地图 / MAP -->
+  <url>
+    <loc>https://goldisle.org/map</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 关于 / About -->
+  <url>
+    <loc>https://goldisle.org/about</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 音乐 Works / Music 索引 -->
+  <url>
+    <loc>https://goldisle.org/music</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 更新 / Updates (如果你保留了这类页面) -->
+  <url>
+    <loc>https://goldisle.org/updates</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- 四大 Region -->
+  <url>
+    <loc>https://goldisle.org/sea</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://goldisle.org/eurasia</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://goldisle.org/north-london</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://goldisle.org/night-shore</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Nodes（代表作品 / 核心节点） -->
+
+  <!-- North London Region Nodes -->
+  <url>
+    <loc>https://goldisle.org/north-london/above-ally-pally</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 更多 Region 节点可按此模板补充 -->
+
+  <!-- 示例结构（如果存在） -->
+  <!--
+  <url>
+    <loc>https://goldisle.org/sea/[node-name]</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  -->
+
+</urlset>
