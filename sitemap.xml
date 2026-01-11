@@ -56,6 +56,10 @@
     <priority>0.7</priority>
   </url>
 
+<url>
+  <loc>https://goldisle.org/isletoken/</loc>  
+</url>  
+  
   <!-- 更多 Region 节点可按此模板补充 -->
 
   <!-- 示例结构（如果存在） -->
