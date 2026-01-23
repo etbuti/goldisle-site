@@ -70,5 +70,11 @@
 <url>
   <loc>https://goldisle.org/isletoken/</loc>  
 </url>  
-    
+
+<url>
+  <loc>https://goldisle.org/larc/</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+  
 </urlset>
