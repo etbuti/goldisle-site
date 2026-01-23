@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Public service tools are intentionally open for indexing
+Allow: /larc/
+
 Sitemap: https://goldisle.org/sitemap.xml
