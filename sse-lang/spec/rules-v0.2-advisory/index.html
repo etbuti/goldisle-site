@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SSE-Lang — Advisory Rules v0.2</title>
+  <style>
+    body { font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 24px; line-height: 1.45; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    h2 { font-size: 16px; margin: 22px 0 8px; }
+    pre { background:#f7f7f7; padding:12px; border-radius:12px; overflow-x:auto; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; }
+    .nav { margin-bottom:16px; font-size:13px; opacity:0.85; }
+    a { color: inherit; }
+    .muted { opacity: 0.8; font-size: 13px; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #e5e5e5; padding: 8px; vertical-align: top; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav"><a href="/sse-lang/check/">← Back to Judgement Endpoint</a></div>
+    <h1>SSE-Lang — Advisory Rules v0.2 (Public Demo)</h1>
+    <div class="muted">
+      These rules are <b>soft</b> flags designed to report risk conditions derived from Rating.* inputs.
+      They do not override the hard infeasibility verdict in SSE-Lang v0.1.
+    </div>
+
+    <h2>Rule List</h2>
+    <table>
+      <tr><th>ID</th><th>IF</th><th>THEN</th><th>Status</th><th>Level</th></tr>
+      <tr>
+        <td><code>V0_2_A1</code></td>
+        <td><code>AnyCriticalFlag = true</code></td>
+        <td>Advisory: critical rating present</td>
+        <td>draft</td><td>soft</td>
+      </tr>
+      <tr>
+        <td><code>V0_2_A2</code></td>
+        <td><code>ModerateOrWorseCount &gt;= 3</code></td>
+        <td>Advisory: many attributes moderate-or-worse</td>
+        <td>draft</td><td>soft</td>
+      </tr>
+      <tr>
+        <td><code>V0_2_A3</code></td>
+        <td><code>Rating.Synthesis = critical</code></td>
+        <td>Advisory: synthesis rated critical</td>
+        <td>draft</td><td>soft</td>
+      </tr>
+    </table>
+
+    <h2>Notes</h2>
+    <p>
+      Soft rules are evaluated in the same matching engine as hard rules, but they are separated by <code>level: "soft"</code>.
+      The endpoint may display a <b>YES (ADVISORY)</b> verdict when soft rules are triggered while no hard infeasibility is triggered.
+    </p>
+  </div>
+</body>
+</html>
