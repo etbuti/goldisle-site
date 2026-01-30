@@ -492,7 +492,12 @@ function renderResult(result) {
     verdict: result.verdict,
     judgement: result.judgement,
     primary_rule: result.rule ? { id: result.rule.id, cit: result.rule.cit || "", level: result.rule.level || "" } : null,
-    triggered: result.triggered.map(r => r.id)
+    triggered: result.triggered.map(r => r.id),
+    derivations: Array.isArray(result.derivations) ? result.derivations.map(d => ({
+      name: d.name,
+      value: d.value,
+      from: Array.isArray(d.from) ? d.from.map(x => ({ field: x.field, level: x.level })) : undefined
+    })) : []
   };
   const traceId = `SSE-${simpleHash(stableStringify(tracePayload))}`;
 
