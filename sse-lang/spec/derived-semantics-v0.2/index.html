@@ -1,1 +1,55 @@
-..
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SSE-Lang — Derived Semantics v0.2</title>
+  <style>
+    body { font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 24px; line-height: 1.45; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    h2 { font-size: 16px; margin: 22px 0 8px; }
+    pre { background:#f7f7f7; padding:12px; border-radius:12px; overflow-x:auto; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; }
+    .nav { margin-bottom:16px; font-size:13px; opacity:0.85; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav"><a href="/sse-lang/check/">← Back to Judgement Endpoint</a></div>
+    <h1>SSE-Lang — Derived Semantics v0.2 (Public Checker Addendum)</h1>
+<pre><code>Status: Public demonstrator addendum for derived/computed fields in the judgement endpoint.
+Scope: Defines how Rating.* inputs are normalized and how derived fields are computed prior to v0.1 rule evaluation.
+Non-goal: This addendum does not change the v0.1 infeasibility rules; it only defines computed inputs that feed those rules.</code></pre>
+<h2>1. Rating Inputs</h2>
+<p>The checker accepts rating assignments using the key prefix:</p>
+<pre><code>  Rating.&lt;Name&gt;: rating.&lt;level&gt;;</code></pre>
+<p>Examples:</p>
+<pre><code>  Rating.Stability: rating.moderate;
+  Rating.Interface: rating.good;
+  Rating.Synthesis: rating.major;</code></pre>
+<p>Keys are case-insensitive. Values are normalized to lower-case.</p>
+<h2>2. Rating Scale (Ordinal)</h2>
+<p>The ordinal scale is fixed in the public v0.2 demonstrator as:</p>
+<pre><code>  excellent &gt; good &gt; fair &gt; moderate &gt; poor &gt; major &gt; critical</code></pre>
+<p>“Moderate-or-worse” means any level ranked at or below (worse than) moderate:</p>
+<p>  moderate, poor, major, critical</p>
+<p>Unrecognized rating levels are ignored and may generate a parse warning in Derivations.</p>
+<h2>3. Derived Fields</h2>
+<pre><code>3.1 ModerateOrWorseCount</code></pre>
+<pre><code>If at least one Rating.* field is provided, the checker derives:</code></pre>
+<pre><code>  ModerateOrWorseCount = number of Rating.* fields whose level is moderate-or-worse.</code></pre>
+<p>This derived value is written back into the evaluation input map.<br/>If aliases are available in rules.json, the derived key is canonicalized to match the v0.1 ruleset field name.</p>
+<p>3.2 AnyCriticalFlag</p>
+<pre><code>If any Rating.* field has level “critical”, the checker sets:</code></pre>
+<p>  AnyCriticalFlag = true<br/>Otherwise false.</p>
+<p>Note: In the public v0.2 demonstrator, AnyCriticalFlag is reported for transparency but does not necessarily trigger an infeasibility rule unless a rule explicitly references it.</p>
+<h2>4. Transparency &amp; Trace</h2>
+<p>The judgement endpoint displays a “Derivations (v0.2 demo)” section listing:</p>
+<pre><code>- derived field values
+- the Rating.* fields contributing to the derivation</code></pre>
+<p>Additionally, derivations are included in the Trace payload that determines the Trace ID, enabling reproducible referencing of derived semantics.</p>
+  </div>
+</body>
+</html>
