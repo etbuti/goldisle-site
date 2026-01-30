@@ -1,36 +1,128 @@
-SSE-Lang v0.2<br>
-<br>
-A Structured Rule Language for Feasibility Judgement<br>
-SSE-Lang (Structured Safety & Evaluation Language) is a lightweight rule-based language <br>
-for expressing feasibility judgement in scientific and engineering contexts <br>
-where fully quantitative modeling is unavailable or inappropriate.<br>
-<br>
-Instead of predicting outcomes, SSE-Lang formalizes expert-style reasoning: <br>
-conditional exclusions, necessary constraints, and advisory considerations. <br>
-It distinguishes hard rules, which define strict infeasibility, from soft (advisory) rules, <br>
-which signal caution without vetoing feasibility.<br>
-<br>
-In v0.2, SSE-Lang introduces derived semantics, <br>
-allowing higher-level indicators to be inferred <br>
-from multiple qualitative inputs rather than manually specified. <br>
-<br>
-Each evaluation produces a transparent judgement trace, <br>
-including triggered rules, derived indicators, and a stable trace identifier.
-<br>
-<br>
-SSE-Lang is deterministic, interpretable, and auditable. <br>
-It does not replace expert judgement, but provides a formal scaffold <br>
-that makes decision logic explicit and discussable.
-<br>
-<br>
-Status:<br>
-<br>
-SSE-Lang v0.2 — Stable (Public Demonstrator)
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SSE-Lang v0.2 — Feasibility Judgement Language</title>
 
-<div style="font-size:12px; opacity:0.7; margin-bottom:10px">
- 
-  <a href="/sse-lang/assets/SSE-Lang_v0.2_One-Page_Abstract.pdf>Download 1-page academic overview (PDF)/a>
-  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+      color: #111;
+      background: #fff;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.75;
+      margin-bottom: 24px;
+    }
+
+    p {
+      font-size: 14px;
+      margin: 12px 0;
+    }
+
+    .status {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .links {
+      margin-top: 24px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    .links a {
+      text-decoration: underline;
+      margin-right: 12px;
+    }
+
+    .footer {
+      margin-top: 36px;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <h1>SSE-Lang v0.2</h1>
+  <div class="subtitle">
+    A Structured Rule Language for Feasibility Judgement
+  </div>
+
+  <p>
+    SSE-Lang (Structured Safety &amp; Evaluation Language) is a lightweight rule-based
+    language for expressing feasibility judgement in scientific and engineering contexts
+    where fully quantitative modeling is unavailable or inappropriate.
+  </p>
+
+  <p>
+    Instead of predicting outcomes, SSE-Lang formalizes expert-style reasoning:
+    conditional exclusions, necessary constraints, and advisory considerations.
+    It distinguishes <b>hard rules</b>, which define strict infeasibility,
+    from <b>soft (advisory) rules</b>, which signal caution without vetoing feasibility.
+  </p>
+
+  <p>
+    In v0.2, SSE-Lang introduces <b>derived semantics</b>, allowing higher-level indicators
+    to be inferred from multiple qualitative inputs rather than manually specified.
+  </p>
+
+  <p>
+    Each evaluation produces a transparent judgement trace, including triggered rules,
+    derived indicators, and a stable trace identifier.
+  </p>
+
+  <p>
+    SSE-Lang is deterministic, interpretable, and auditable. It does not replace expert
+    judgement, but provides a formal scaffold that makes decision logic explicit
+    and discussable.
+  </p>
+
+  <div class="status">
+    <b>Status:</b><br/>
+    SSE-Lang v0.2 — Stable (Public Demonstrator)
+  </div>
+
+  <div class="links">
+    <a href="/sse-lang/check/">Open Rule Checker</a>
+    <a href="/sse-lang/citation/">How to Cite</a>
+    <a href="/sse-lang/assets/SSE-Lang_v0.2_One-Page_Abstract.pdf" target="_blank" rel="noopener">
+      Download 1-page PDF
+    </a>
+  </div>
+
+  <div class="footer">
+    © 2026 Evan Bei · SSE-Lang
+  </div>
+
 </div>
-
-
+</body>
+</html>
