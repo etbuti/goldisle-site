@@ -421,22 +421,44 @@ function ruleMatches(ruleset, rule, inputMap) {
 
 function decide(ruleset, inputMap) {
   const triggered = [];
+  const triggeredHard = [];
+  const triggeredSoft = [];
 
   for (const rule of (ruleset.rules || [])) {
     const m = ruleMatches(ruleset, rule, inputMap);
-    if (m.matched) triggered.push(rule);
+    if (m.matched) {
+      triggered.push(rule);
+      const level = String(rule.level || ruleset.defaults?.level || "hard").toLowerCase();
+      if (level === "soft") triggeredSoft.push(rule);
+      else triggeredHard.push(rule);
+    }
   }
 
-  // Priority: any Infeasible => NO
-  const infeasible = triggered.find(r => (r.then?.judgement || "").toLowerCase() === "infeasible");
-  if (infeasible) return { ruleset, verdict: "NO", judgement: "Infeasible", rule: infeasible, triggered };
+  // Hard priority: any hard infeasible => NO
+  const hardInfeasible = triggeredHard.find(r => (r.then?.judgement || "").toLowerCase() === "infeasible");
+  if (hardInfeasible) return { ruleset, verdict: "NO", judgement: "Infeasible", rule: hardInfeasible, triggered, triggeredHard, triggeredSoft };
 
-  // Otherwise, if any non-infeasible judgement exists, return that (first)
-  const other = triggered.find(r => (r.then?.judgement || "").toLowerCase() !== "infeasible");
-  if (other) return { ruleset, verdict: "YES*", judgement: other.then.judgement, rule: other, triggered };
+  // If any hard non-infeasible judgement exists, return that (first)
+  const hardOther = triggeredHard.find(r => (r.then?.judgement || "").toLowerCase() !== "infeasible");
+  if (hardOther) return { ruleset, verdict: "YES*", judgement: hardOther.then.judgement, rule: hardOther, triggered, triggeredHard, triggeredSoft };
 
-  // Default: Yes (no hard no-go triggered)
-  return { ruleset, verdict: "YES", judgement: "No hard infeasibility triggered", rule: null, triggered };
+  // Soft/advisory: does not change feasibility verdict, but reports flags
+  if (triggeredSoft.length) {
+    // pick first advisory as primary for display
+    const primary = triggeredSoft[0];
+    return {
+      ruleset,
+      verdict: "YES (ADVISORY)",
+      judgement: primary.then?.judgement || "Advisory flags present",
+      rule: primary,
+      triggered,
+      triggeredHard,
+      triggeredSoft
+    };
+  }
+
+  // Default
+  return { ruleset, verdict: "YES", judgement: "No hard infeasibility triggered", rule: null, triggered, triggeredHard, triggeredSoft };
 }
 
 function stableStringify(obj) {
@@ -503,6 +525,11 @@ function renderResult(result) {
 
   let html = `<div><b>Judgement:</b> ${escapeHtml(result.judgement)}</div>`;
   html += `<div style="margin-top:10px"><b>Trace ID:</b> <code>${escapeHtml(traceId)}</code></div>`;
+  // Advisory summary
+  if (Array.isArray(result.triggeredSoft) && result.triggeredSoft.length) {
+    html += `<div style="margin-top:10px"><b>Advisory flags:</b> ${result.triggeredSoft.length} soft rule(s) triggered.</div>`;
+  }
+
   if (Array.isArray(result.derivations) && result.derivations.length) {
     let dhtml = "";
     for (const d of result.derivations) {
@@ -531,6 +558,8 @@ function renderResult(result) {
   detailEl.innerHTML = html;
 
   listEl.innerHTML = "";
+  const hardSet = new Set((result.triggeredHard || []).map(x => x.id));
+  const softSet = new Set((result.triggeredSoft || []).map(x => x.id));
   for (const r of result.triggered) {
     const li = document.createElement("li");
     li.textContent = `${r.id} — ${r.name} (${r.then?.judgement || ""})`;

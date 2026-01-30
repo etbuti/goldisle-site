@@ -302,6 +302,63 @@
         "infeasibility",
         "ion-transport"
       ]
+    },
+    {
+      "id": "V0_2_A1",
+      "group": "Derived Semantics Advisory (v0.2 demo)",
+      "status": "draft",
+      "level": "soft",
+      "if": [
+        {
+          "type": "atomic",
+          "field": "AnyCriticalFlag",
+          "op": "=",
+          "value": "true"
+        }
+      ],
+      "then": {
+        "judgement": "Advisory: critical rating present",
+        "explain": "At least one Rating.* field is 'critical'. Review assumptions and evidence before claiming feasibility."
+      },
+      "cit": "SSE-Lang v0.2 demo, Derived Semantics Advisory Rule V0_2_A1"
+    },
+    {
+      "id": "V0_2_A2",
+      "group": "Derived Semantics Advisory (v0.2 demo)",
+      "status": "draft",
+      "level": "soft",
+      "if": [
+        {
+          "type": "atomic",
+          "field": "ModerateOrWorseCount",
+          "op": ">=",
+          "value": 3
+        }
+      ],
+      "then": {
+        "judgement": "Advisory: many attributes moderate-or-worse",
+        "explain": "Derived ModerateOrWorseCount ≥ 3 indicates multiple weak points. Consider mitigation or higher-quality evidence."
+      },
+      "cit": "SSE-Lang v0.2 demo, Derived Semantics Advisory Rule V0_2_A2"
+    },
+    {
+      "id": "V0_2_A3",
+      "group": "Derived Semantics Advisory (v0.2 demo)",
+      "status": "draft",
+      "level": "soft",
+      "if": [
+        {
+          "type": "atomic",
+          "field": "Rating.Synthesis",
+          "op": "=",
+          "value": "critical"
+        }
+      ],
+      "then": {
+        "judgement": "Advisory: synthesis rated critical",
+        "explain": "Synthesis rated as critical suggests practicality constraints. This is an advisory flag in v0.2 demo."
+      },
+      "cit": "SSE-Lang v0.2 demo, Derived Semantics Advisory Rule V0_2_A3"
     }
   ],
   "defaults": {
