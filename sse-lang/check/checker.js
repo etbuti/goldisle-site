@@ -129,7 +129,7 @@ function tokenizeSSE(text) {
       const start = locNow();
       if (src[i+1] === "!") err("Directive syntax '#!' not supported in v0.1.1 input");
       i++; col++;
-      if (!isAlpha(src[i])) err("Expected identifier after '#'");
+      if (!isAlnum(src[i])) err("Expected symbol after '#'");
       let name = "";
       while (i < src.length && isAlnum(src[i])) { name += src[i]; i++; col++; }
       push("SYMBOL", name, start);
@@ -582,7 +582,7 @@ async function main() {
   });
 
   // Load example
-  const example = `IonPathDimensionality: 3D;
+  const example = `IonPathDimensionality: #3D;
 PathContinuity: flexible;
 DataReliability: reliability.partial;
 
