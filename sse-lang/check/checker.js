@@ -1,5 +1,5 @@
 async function loadRules() {
-  const res = await fetch("/sse-lang/check/rules.json?v=4a", { cache: "no-store" });
+  const res = await fetch("/sse-lang/check/rules.json", { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load rules.json");
   return await res.json();
 }
