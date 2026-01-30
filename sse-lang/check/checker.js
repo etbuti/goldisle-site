@@ -493,7 +493,71 @@ function escapeHtml(s) {
     .replaceAll("'", "&#039;");
 }
 
+
+function clearErrors() {
+  const e = document.getElementById("errors");
+  if (e) e.innerHTML = "";
+}
+
+function parseLineColFromMessage(msg) {
+  const m = /at\s+(\d+):(\d+)/i.exec(msg || "");
+  if (!m) return null;
+  return { line: parseInt(m[1], 10), col: parseInt(m[2], 10) };
+}
+
+function getLineSnippet(text, line, col) {
+  const lines = String(text || "").split(/\r?\n/);
+  const idx = Math.max(1, Math.min(line, lines.length)) - 1;
+  const s = lines[idx] || "";
+  const c = Math.max(1, Math.min(col, s.length + 1));
+  const pointer = " ".repeat(c - 1) + "^";
+  return { lineText: s, pointer };
+}
+
+function hintForParseError(msg) {
+  const m = String(msg || "").toLowerCase();
+  if (m.includes("expected semi")) return "Hint: Each statement must end with ';' (including the last assignment before CHECK;).";
+  if (m.includes("expected ':' or '='")) return "Hint: Assignments must be 'Key: Value;' or 'Key = Value;'. If using dotted keys like Rating.Stability, ensure the ':' appears after the full key.";
+  if (m.includes("expected identifier after '#'") || m.includes("expected symbol after '#'")) return "Hint: Use symbols like '#3D' or quote strings like \"3D\".";
+  return "Hint: Check punctuation (':' '=' ';') and ensure each statement is on its own line.";
+}
+
+function renderParseError(err, inputText) {
+  const verdictEl = document.getElementById("verdict");
+  const detailsEl = document.getElementById("details");
+  const trigEl = document.getElementById("triggered");
+  const errorsEl = document.getElementById("errors");
+
+  if (verdictEl) {
+    verdictEl.textContent = "—";
+    verdictEl.setAttribute("data-state", "no");
+  }
+  if (detailsEl) detailsEl.innerHTML = "";
+  if (trigEl) trigEl.innerHTML = "";
+
+  const msg = (err && err.message) ? err.message : String(err || "Unknown error");
+  const lc = parseLineColFromMessage(msg);
+  let snippetHtml = "";
+  if (lc) {
+    const sn = getLineSnippet(inputText, lc.line, lc.col);
+    snippetHtml = `<div class="errloc">Location: line ${lc.line}, column ${lc.col}</div>
+      <div class="errcode"><code>${escapeHtml(sn.lineText)}</code><br/><code class="caret">${escapeHtml(sn.pointer)}</code></div>`;
+  }
+
+  const hint = hintForParseError(msg);
+  if (errorsEl) {
+    errorsEl.innerHTML = `<div class="errbox">
+      <div class="errtitle">Syntax error</div>
+      <div>${escapeHtml(msg)}</div>
+      ${snippetHtml}
+      <div class="errhint">${escapeHtml(hint)}</div>
+    </div>`;
+  }
+}
+
+
 function renderResult(result) {
+  clearErrors();
   const verdictEl = document.getElementById("verdict");
   const detailEl = document.getElementById("details");
   const listEl = document.getElementById("triggered");
@@ -568,6 +632,7 @@ async function main() {
   const btn = document.getElementById("checkBtn");
   btn.addEventListener("click", () => {
     const input = document.getElementById("input").value;
+  try {
     let map = parseSSELangOrLegacy(input, ruleset);
     const derived = deriveInput(map, ruleset);
     map = derived.map;
@@ -586,6 +651,7 @@ Rating.Interface: rating.good;
 Rating.Synthesis: rating.major;
 CHECK;`;
   document.getElementById("input").value = example;
+  } catch (err) { renderParseError(err, input); }
 }
 main().catch(err => {
   document.getElementById("details").textContent = "Error: " + err.message;
