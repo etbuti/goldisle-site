@@ -129,7 +129,7 @@ function tokenizeSSE(text) {
       const start = locNow();
       if (src[i+1] === "!") err("Directive syntax '#!' not supported in v0.1.1 input");
       i++; col++;
-      if (!isAlnum(src[i])) err("Expected symbol after '#'");
+      if (!isAlpha(src[i])) err("Expected identifier after '#'");
       let name = "";
       while (i < src.length && isAlnum(src[i])) { name += src[i]; i++; col++; }
       push("SYMBOL", name, start);
@@ -265,6 +265,81 @@ function parseSSELangProgram(text, ruleset) {
 
   // For v0.1 demo we don't require CHECK; but if present, we treat as explicit.
   return { map, seenQuery };
+}
+
+
+// -----------------------------
+// v0.2 demo: Derived Semantics (Computed Fields)
+// - Accepts Rating.<name>: rating.<level>;
+// - Derives ModerateOrWorseCount from all Rating.* fields using an ordinal scale.
+// - Produces a derivations object for transparent reporting.
+// -----------------------------
+
+const RATING_SCALE = ["excellent","good","fair","moderate","poor","major","critical"];
+
+function ratingRank(level) {
+  const x = String(level || "").toLowerCase().trim();
+  return RATING_SCALE.indexOf(x);
+}
+
+function deriveInput(map, ruleset) {
+  const derivations = [];
+  const counted = [];
+  let totalRatings = 0;
+
+  for (const [k, v] of map.entries()) {
+    const key = String(k);
+    if (!key.toLowerCase().startsWith("rating.")) continue;
+    totalRatings += 1;
+
+    const level = String(v).toLowerCase().trim();
+    const r = ratingRank(level);
+    if (r === -1) {
+      derivations.push({
+        name: "RatingParseWarning",
+        value: `Ignored Rating field '${key}' with unrecognized level '${level}'`
+      });
+      continue;
+    }
+
+    // Count moderate-or-worse: level >= moderate
+    if (r >= ratingRank("moderate")) {
+      counted.push({ field: key, level });
+    }
+  }
+
+  // Derive ModerateOrWorseCount only if any Rating.* provided
+  if (totalRatings > 0) {
+    const count = counted.length;
+    // Canonicalize derived key via aliases if possible (match existing rules fields)
+    const aliasToCanonical = new Map();
+    const aliases = ruleset.aliases || {};
+    for (const [canon, alist] of Object.entries(aliases)) {
+      aliasToCanonical.set(String(canon).toLowerCase(), canon);
+      for (const a of (alist || [])) aliasToCanonical.set(String(a).toLowerCase(), canon);
+    }
+
+    const derivedKey = aliasToCanonical.get("moderateorworsecount") ||
+                       aliasToCanonical.get("count of attributes rated moderate or worse") ||
+                       "ModerateOrWorseCount";
+
+    map.set(derivedKey, count);
+
+    derivations.push({
+      name: "ModerateOrWorseCount",
+      value: count,
+      from: counted
+    });
+
+    // Optional: AnyCriticalFlag
+    const anyCritical = counted.some(x => x.level === "critical");
+    derivations.push({
+      name: "AnyCriticalFlag",
+      value: anyCritical
+    });
+  }
+
+  return { map, derivations };
 }
 
 function parseSSELangOrLegacy(text, ruleset) {
@@ -423,6 +498,19 @@ function renderResult(result) {
 
   let html = `<div><b>Judgement:</b> ${escapeHtml(result.judgement)}</div>`;
   html += `<div style="margin-top:10px"><b>Trace ID:</b> <code>${escapeHtml(traceId)}</code></div>`;
+  if (Array.isArray(result.derivations) && result.derivations.length) {
+    let dhtml = "";
+    for (const d of result.derivations) {
+      if (d.name === "ModerateOrWorseCount" && Array.isArray(d.from)) {
+        const items = d.from.map(x => `<li><code>${escapeHtml(x.field)}</code> = ${escapeHtml(x.level)}</li>`).join("");
+        dhtml += `<div style="margin-top:8px"><b>${escapeHtml(d.name)}</b> = <code>${escapeHtml(String(d.value))}</code> (from ${d.from.length} field(s))</div>`;
+        dhtml += `<ul>${items}</ul>`;
+      } else {
+        dhtml += `<div style="margin-top:8px"><b>${escapeHtml(d.name)}</b>: ${escapeHtml(String(d.value))}</div>`;
+      }
+    }
+    html += `<details style="margin-top:10px"><summary style="cursor:pointer; font-weight:700">Derivations (v0.2 demo)</summary>${dhtml}</details>`;
+  }
   if (result.rule) {
     html += `<div style="margin-top:6px"><b>Primary Rule:</b> ${escapeHtml(result.rule.id)} — ${escapeHtml(result.rule.name)}</div>`;
     html += `<div><b>Group:</b> ${escapeHtml(result.rule.group || "")}</div>`;
@@ -451,16 +539,23 @@ async function main() {
   const btn = document.getElementById("checkBtn");
   btn.addEventListener("click", () => {
     const input = document.getElementById("input").value;
-    const map = parseSSELangOrLegacy(input, ruleset);
+    let map = parseSSELangOrLegacy(input, ruleset);
+    const derived = deriveInput(map, ruleset);
+    map = derived.map;
     const result = decide(ruleset, map);
+    result.derivations = derived.derivations;
     renderResult(result);
   });
 
   // Load example
-  const example = `IonPathDimensionality: #3D;
-PathContinuity: #flexible;
+  const example = `IonPathDimensionality: 3D;
+PathContinuity: flexible;
 DataReliability: reliability.partial;
-ModerateOrWorseCount: 2;
+
+// v0.2 demo: derived ratings → ModerateOrWorseCount
+Rating.Stability: rating.moderate;
+Rating.Interface: rating.good;
+Rating.Synthesis: rating.major;
 CHECK;`;
   document.getElementById("input").value = example;
 }
