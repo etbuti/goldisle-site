@@ -44,15 +44,10 @@ function parseKeyValueLines(text, ruleset) {
 
 
 
-// -----------------------------
 // SSE-Lang v0.1.1 (Input Syntax) — Tokenize + Parse
-// Grammar (minimal):
 //   assign := ident (":"|"=") value ";"
-//   value  := number | "string" | #symbol | enumPath
 //   enumPath := ident ("." ident)*
-//   query := ("CHECK"|"EVAL") ";"
 // The parser returns a Map<canonicalField, normalizedValue>.
-// -----------------------------
 
 function isLikelySSELang(text) {
   const t = (text || "").trim();
@@ -268,11 +263,8 @@ function parseSSELangProgram(text, ruleset) {
 }
 
 
-// -----------------------------
 // v0.2 demo: Derived Semantics (Computed Fields)
-// - Accepts Rating.<name>: rating.<level>;
 // - Derives ModerateOrWorseCount from all Rating.* fields using an ordinal scale.
-// - Produces a derivations object for transparent reporting.
 // -----------------------------
 
 const RATING_SCALE = ["excellent","good","fair","moderate","poor","major","critical"];
@@ -586,7 +578,6 @@ async function main() {
 PathContinuity: flexible;
 DataReliability: reliability.partial;
 
-// v0.2 demo: derived ratings → ModerateOrWorseCount
 Rating.Stability: rating.moderate;
 Rating.Interface: rating.good;
 Rating.Synthesis: rating.major;
