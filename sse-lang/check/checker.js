@@ -629,17 +629,17 @@ function renderResult(result) {
 async function main() {
   const ruleset = await loadRules();
 
-  const btn = document.getElementById("checkBtn");
-  btn.addEventListener("click", () => {
-    const input = document.getElementById("input").value;
+  const btn = document.getElementById("checkBtn").addEventListener("click", async () => {
+  clearErrors();
+  const input = document.getElementById("input").value;
+
   try {
-    let map = parseSSELangOrLegacy(input, ruleset);
-    const derived = deriveInput(map, ruleset);
-    map = derived.map;
-    const result = decide(ruleset, map);
-    result.derivations = derived.derivations;
+    const result = parseSSELangOrLegacy(input);
     renderResult(result);
-  });
+  } catch (err) {
+    renderParseError(err, input);
+  }
+});
 
   // Load example
   const example = `IonPathDimensionality: #3D;
