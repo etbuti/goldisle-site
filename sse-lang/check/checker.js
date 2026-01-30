@@ -629,19 +629,7 @@ function renderResult(result) {
 async function main() {
   const ruleset = await loadRules();
 
-  const btn = document.getElementById("checkBtn");
-  btn.addEventListener("click", () => {
-    const input = document.getElementById("input").value;
-  try {
-    let map = parseSSELangOrLegacy(input, ruleset);
-    const derived = deriveInput(map, ruleset);
-    map = derived.map;
-    const result = decide(ruleset, map);
-    result.derivations = derived.derivations;
-    renderResult(result);
-  });
-
-  // Load example
+  // Load example (once)
   const example = `IonPathDimensionality: #3D;
 PathContinuity: flexible;
 DataReliability: reliability.partial;
@@ -649,10 +637,38 @@ DataReliability: reliability.partial;
 Rating.Stability: rating.moderate;
 Rating.Interface: rating.good;
 Rating.Synthesis: rating.major;
+
 CHECK;`;
-  document.getElementById("input").value = example;
-  } catch (err) { renderParseError(err, input); }
+  const inputEl = document.getElementById("input");
+  if (inputEl && !String(inputEl.value || "").trim()) {
+    inputEl.value = example;
+  }
+
+  const btn = document.getElementById("checkBtn");
+  btn.addEventListener("click", () => {
+    clearErrors();
+    const input = document.getElementById("input").value;
+
+    try {
+      let map = parseSSELangOrLegacy(input, ruleset);
+      const derived = deriveInput(map, ruleset);
+      map = derived.map;
+
+      const result = decide(ruleset, map);
+      result.derivations = derived.derivations;
+
+      renderResult(result);
+    } catch (err) {
+      renderParseError(err, input);
+    }
+  });
 }
+
 main().catch(err => {
-  document.getElementById("details").textContent = "Error: " + err.message;
+  // Surface boot errors in the same UI panel for consistency.
+  const input = (document.getElementById("input") && document.getElementById("input").value) || "";
+  try { clearErrors(); } catch (_) {}
+  try { renderParseError(err, input); } catch (_) {}
+  const d = document.getElementById("details");
+  if (d) d.textContent = "Error: " + (err && err.message ? err.message : String(err));
 });
