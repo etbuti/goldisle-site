@@ -1,0 +1,179 @@
+What is SSE-Lang?
+
+什么是 SSE-Lang？
+
+EN
+SSE-Lang (Structured Safety & Evaluation Language) is a lightweight rule-based language for expressing feasibility judgement in scientific and engineering contexts where fully quantitative modeling is unavailable or inappropriate.
+
+中
+SSE-Lang（Structured Safety & Evaluation Language，结构化安全与评估语言）是一种轻量级的规则语言，用于在不适合或无法进行完整定量建模的科学与工程场景中，表达可行性判断。
+
+⸻
+
+Why SSE-Lang?
+
+为什么需要 SSE-Lang？
+
+EN
+In many real-world domains, decisions are not derived from prediction alone. Expert reasoning often appears as conditional exclusions, necessary constraints, and advisory considerations that are implicit and difficult to audit.
+
+中
+在许多真实场景中，决策并非来自预测本身。专家判断往往以条件性排除、必要约束和建议性提示的形式出现，但这些推理通常是隐含的、难以审计的。
+
+EN
+SSE-Lang is designed to make this reasoning explicit, structured, and reproducible—without pretending it is a predictive model.
+
+中
+SSE-Lang 的目标，是在不伪装为预测模型的前提下，将这些推理显式化、结构化并可复现。
+
+⸻
+
+What SSE-Lang Is (and Is Not)
+
+SSE-Lang 是什么（以及不是什么）
+
+EN — SSE-Lang is:
+	•	A rule language, not a machine-learning model
+	•	Deterministic, interpretable, and auditable
+	•	Explicit about why a judgement is reached
+
+中 — SSE-Lang 是：
+	•	一种规则语言，而非机器学习模型
+	•	确定性的、可解释的、可审计的
+	•	清楚说明“为何得出该判断”
+
+EN — SSE-Lang is not:
+	•	A performance predictor
+	•	A substitute for expert judgement
+	•	A black-box decision system
+
+中 — SSE-Lang 不是：
+	•	性能预测器
+	•	专家判断的替代品
+	•	黑箱式决策系统
+
+⸻
+
+Core Concepts
+
+核心概念
+
+1. Explicit Inputs
+
+1. 显式输入
+
+EN
+Inputs are declared as structured statements that are both human-readable and machine-interpretable.
+
+IonPathDimensionality: #3D;
+Rating.Stability: rating.moderate;
+CHECK;
+
+中
+输入以结构化语句形式声明，兼顾人类可读性与机器可解析性。
+
+⸻
+
+2. Derived Semantics (v0.2)
+
+2. 派生语义（v0.2）
+
+EN
+Higher-level indicators are derived from multiple qualitative inputs rather than manually specified, improving consistency and traceability.
+
+中
+高层指标由多个定性输入自动派生，而非人工填写，从而提升一致性与可追溯性。
+
+⸻
+
+3. Hard vs Soft Rules
+
+3. 硬规则与软规则
+
+EN
+	•	Hard rules define strict infeasibility conditions. Any triggered hard infeasible rule yields NO.
+	•	Soft (advisory) rules do not veto feasibility but attach cautionary signals.
+
+中
+	•	硬规则：定义严格的不可行条件，任一触发即判定 NO。
+	•	软规则（建议）：不否决可行性，但给出风险提示。
+
+EN
+This mirrors real expert reasoning: not all warnings are vetoes.
+
+中
+这与真实专家判断一致：并非所有警告都等同于否决。
+
+⸻
+
+4. Transparent Judgement Trace
+
+4. 透明的判断轨迹
+
+EN
+Each evaluation produces a clear verdict, triggered rules, derived indicators, and a stable trace identifier suitable for citation.
+
+中
+每次评估都会生成清晰的结论、触发规则、派生指标，以及可用于引用的稳定 Trace ID。
+
+⸻
+
+Why a Language, Not a Model?
+
+为什么是语言，而不是模型？
+
+EN
+Many failures stem from implicit assumptions rather than weak models. SSE-Lang makes assumptions explicit and discussable.
+
+中
+许多问题并非模型能力不足，而是隐含假设不可见。SSE-Lang 将假设显式化，使其可讨论、可审计。
+
+Public Demonstrator (v0.2)
+
+公共演示版（v0.2）
+
+EN
+The current web interface is a public demonstrator for methodological illustration and academic discussion.
+
+中
+当前网页界面为公共演示版，用于方法展示与学术讨论。
+
+Status / 状态
+SSE-Lang v0.2 — Stable (Public Demonstrator)
+The language core and rule structure are frozen.
+
+⸻
+
+Intended Use
+
+适用范围
+
+EN
+	•	Methodological illustration
+	•	Transparent decision logic documentation
+	•	Educational and exploratory use
+
+中
+	•	方法论展示
+	•	透明的决策逻辑文档
+	•	教学与探索性使用
+
+EN
+It is not intended for automated deployment without expert oversight.
+
+中
+不适用于脱离专家监督的自动化部署。
+
+⸻
+
+Closing Note
+
+结语
+
+EN
+SSE-Lang does not replace expertise. It respects expert reasoning by making it legible, explicit, and discussable.
+
+中
+SSE-Lang 并不取代专家，而是通过让专家推理可读、可见、可讨论来尊重专业判断。
+
+
