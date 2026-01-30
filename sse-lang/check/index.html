@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>SSE-Lang v0.1 — Infeasibility Judgement Endpoint</title>
+  <title>SSE-Lang v0.1 — Rule Checker</title>
   <style>
     body { font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 24px; line-height: 1.35; }
     .wrap { max-width: 980px; margin: 0 auto; }
@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>SSE-Lang v0.1 — Infeasibility Judgement Endpoint</h1>
+  <h1>SSE-Lang v0.1 — Rule Checker (Yes / No)</h1>
   <div class="muted">Input format: one field per line, e.g. <code>Ion Path Dimensionality: 3D</code>. Click Check.</div>
 
   <div class="row" style="margin-top:12px">
@@ -48,22 +48,9 @@
     </div>
   </div>
 
-<details class="card" style="margin-top:16px">
-  <summary style="cursor:pointer; font-weight:700">Public Demo Rule Set</summary>
-  <div style="margin-top:10px; font-size:13px; opacity:0.85">
-    This public checker is provided for academic demonstration of SSE-Lang’s judgement flow and infeasibility screening logic.
-    It may use simplified encodings, aliases, and demonstrative subsets for public deployment.
-  </div>
-</details>
-  
   <div class="footer">
-  <b>Scope &amp; Status.</b> This public page provides an executable <i>judgement aid</i> for evaluating
-  <b>hard infeasibility conditions</b> under SSE-Lang v0.1.
-  It is intended for methodological demonstration and reproducible checking, and it does not substitute expert chemical assessment.
-  <br/><br/>
-  <b>Disclosure Boundary.</b> This checker is not a complete disclosure of the SSE-Lang rule system.
-  The public deployment may use a demonstrative subset or simplified encodings of the original infeasibility logic.
-</div>
+    This page evaluates <b>hard infeasibility rules</b> from SSE-Lang v0.1. It is an auxiliary checker, not a substitute for expert judgement.
+  </div>
 </div>
 
 <script src="./checker.js"></script>

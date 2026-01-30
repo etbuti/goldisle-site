@@ -61,19 +61,27 @@
           "field": "Ion Path Dimensionality",
           "op": "=",
           "value": "1D",
-          "raw": "Ion Path Dimensionality = 1D"
+          "raw": "Ion Path Dimensionality = 1D",
+          "type": "atomic"
         },
         {
           "field": "Path Continuity",
           "op": "=",
           "value": "discrete",
-          "raw": "Path Continuity = discrete"
+          "raw": "Path Continuity = discrete",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Isolated 1D pathways are highly sensitive to defects and disorder,\n\nmaking reliable transport impractical."
+      "rationale": "Isolated 1D pathways are highly sensitive to defects and disorder,\n\nmaking reliable transport impractical.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R1 (Group A — Structural No-Go)",
+      "tags": [
+        "infeasibility"
+      ]
     },
     {
       "id": "R2",
@@ -84,19 +92,27 @@
           "field": "Framework Rigidity",
           "op": "=",
           "value": "soft",
-          "raw": "Framework Rigidity = soft"
+          "raw": "Framework Rigidity = soft",
+          "type": "atomic"
         },
         {
           "field": "Electrochemical Window",
           "op": "=",
           "value": "narrow",
-          "raw": "Electrochemical Window = narrow"
+          "raw": "Electrochemical Window = narrow",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Flexible lattices under narrow electrochemical tolerance\n\nare structurally unstable in practical operation."
+      "rationale": "Flexible lattices under narrow electrochemical tolerance\n\nare structurally unstable in practical operation.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R2 (Group A — Structural No-Go)",
+      "tags": [
+        "infeasibility"
+      ]
     },
     {
       "id": "R3",
@@ -107,19 +123,28 @@
           "field": "Li-Metal Compatibility",
           "op": "=",
           "value": "hostile",
-          "raw": "Li-Metal Compatibility = hostile"
+          "raw": "Li-Metal Compatibility = hostile",
+          "type": "atomic"
         },
         {
           "field": "Mechanical Match",
           "op": "=",
           "value": "poor",
-          "raw": "Mechanical Match = poor"
+          "raw": "Mechanical Match = poor",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Chemical instability combined with mechanical mismatch\n\nleads to inevitable interface failure."
+      "rationale": "Chemical instability combined with mechanical mismatch\n\nleads to inevitable interface failure.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R3 (Group B — Interface No-Go)",
+      "tags": [
+        "infeasibility",
+        "interface"
+      ]
     },
     {
       "id": "R4",
@@ -130,19 +155,28 @@
           "field": "Interfacial Reaction",
           "op": "=",
           "value": "aggressive",
-          "raw": "Interfacial Reaction = aggressive"
+          "raw": "Interfacial Reaction = aggressive",
+          "type": "atomic"
         },
         {
           "field": "Redox Risk",
           "op": "=",
           "value": "high",
-          "raw": "Redox Risk = high"
+          "raw": "Redox Risk = high",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Multiple uncontrolled reaction pathways prevent stable interface formation."
+      "rationale": "Multiple uncontrolled reaction pathways prevent stable interface formation.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R4 (Group B — Interface No-Go)",
+      "tags": [
+        "infeasibility",
+        "interface"
+      ]
     },
     {
       "id": "R5",
@@ -153,19 +187,27 @@
           "field": "Synthesis Accessibility",
           "op": "=",
           "value": "lab-only",
-          "raw": "Synthesis Accessibility = lab-only"
+          "raw": "Synthesis Accessibility = lab-only",
+          "type": "atomic"
         },
         {
           "field": "Material Complexity",
           "op": "=",
           "value": "complex",
-          "raw": "Material Complexity = complex"
+          "raw": "Material Complexity = complex",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Materials without realistic scale-up pathways\n\nare excluded from engineering feasibility."
+      "rationale": "Materials without realistic scale-up pathways\n\nare excluded from engineering feasibility.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R5 (Group C — Engineering No-Go)",
+      "tags": [
+        "infeasibility"
+      ]
     },
     {
       "id": "R6",
@@ -176,19 +218,27 @@
           "field": "Data Reliability",
           "op": "=",
           "value": "speculative",
-          "raw": "Data Reliability = speculative"
+          "raw": "Data Reliability = speculative",
+          "type": "atomic"
         },
         {
           "field": "Ion Path Dimensionality",
           "op": "!=",
           "value": "3D",
-          "raw": "Ion Path Dimensionality ≠ 3D"
+          "raw": "Ion Path Dimensionality ≠ 3D",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Speculative data combined with non-robust transport topology\n\ncannot support meaningful reasoning."
+      "rationale": "Speculative data combined with non-robust transport topology\n\ncannot support meaningful reasoning.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R6 (Group C — Engineering No-Go)",
+      "tags": [
+        "infeasibility"
+      ]
     },
     {
       "id": "R7",
@@ -199,13 +249,20 @@
           "field": "Count of attributes rated moderate or worse",
           "op": ">=",
           "value": 4,
-          "raw": "Count of attributes rated moderate or worse ≥ 4"
+          "raw": "Count of attributes rated moderate or worse ≥ 4",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "Infeasible"
       },
-      "rationale": "Multiple medium risks compound into systemic instability."
+      "rationale": "Multiple medium risks compound into systemic instability.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R7 (Group D — Compound Risk)",
+      "tags": [
+        "infeasibility"
+      ]
     },
     {
       "id": "R8",
@@ -216,25 +273,39 @@
           "field": "Ion Path Dimensionality",
           "op": "=",
           "value": "3D",
-          "raw": "Ion Path Dimensionality = 3D"
+          "raw": "Ion Path Dimensionality = 3D",
+          "type": "atomic"
         },
         {
           "field": "Path Continuity",
           "op": "=",
           "value": "flexible",
-          "raw": "Path Continuity = flexible"
+          "raw": "Path Continuity = flexible",
+          "type": "atomic"
         },
         {
           "field": "Data Reliability",
           "op": ">=",
           "value": "partial",
-          "raw": "Data Reliability ≥ partial"
+          "raw": "Data Reliability ≥ partial",
+          "type": "atomic"
         }
       ],
       "then": {
         "judgement": "High-Potential / Requires Validation"
       },
-      "rationale": "Exceptional transport topology may justify further investigation\n\ndespite unresolved risks."
+      "rationale": "Exceptional transport topology may justify further investigation\n\ndespite unresolved risks.",
+      "status": "normative",
+      "level": "hard",
+      "cit": "SSE-Lang v0.1, Infeasibility Rule R8 (Group E — Conditional Exception)",
+      "tags": [
+        "infeasibility",
+        "ion-transport"
+      ]
     }
-  ]
+  ],
+  "defaults": {
+    "status": "normative",
+    "level": "hard"
+  }
 }

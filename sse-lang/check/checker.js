@@ -120,14 +120,42 @@ function decide(ruleset, inputMap) {
 
   // Priority: any Infeasible => NO
   const infeasible = triggered.find(r => (r.then?.judgement || "").toLowerCase() === "infeasible");
-  if (infeasible) return { verdict: "NO", judgement: "Infeasible", rule: infeasible, triggered };
+  if (infeasible) return { ruleset, verdict: "NO", judgement: "Infeasible", rule: infeasible, triggered };
 
   // Otherwise, if any non-infeasible judgement exists, return that (first)
   const other = triggered.find(r => (r.then?.judgement || "").toLowerCase() !== "infeasible");
-  if (other) return { verdict: "YES*", judgement: other.then.judgement, rule: other, triggered };
+  if (other) return { ruleset, verdict: "YES*", judgement: other.then.judgement, rule: other, triggered };
 
   // Default: Yes (no hard no-go triggered)
-  return { verdict: "YES", judgement: "No hard infeasibility triggered", rule: null, triggered };
+  return { ruleset, verdict: "YES", judgement: "No hard infeasibility triggered", rule: null, triggered };
+}
+
+function stableStringify(obj) {
+  // Deterministic JSON stringify for trace
+  const seen = new WeakSet();
+  const recur = (x) => {
+    if (x && typeof x === "object") {
+      if (seen.has(x)) return null;
+      seen.add(x);
+      if (Array.isArray(x)) return x.map(recur);
+      const keys = Object.keys(x).sort();
+      const out = {};
+      for (const k of keys) out[k] = recur(x[k]);
+      return out;
+    }
+    return x;
+  };
+  return JSON.stringify(recur(obj));
+}
+
+function simpleHash(str) {
+  // lightweight non-crypto hash for trace id (presentation only)
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
 }
 
 function escapeHtml(s) {
@@ -147,10 +175,26 @@ function renderResult(result) {
   verdictEl.textContent = result.verdict;
   verdictEl.dataset.state = result.verdict.startsWith("NO") ? "no" : "yes";
 
+  // Build a lightweight, citable trace identifier
+  const now = new Date().toISOString();
+  const tracePayload = {
+    when: now,
+    ruleset: { spec: result.ruleset?.spec, version: result.ruleset?.version, source: result.ruleset?.source },
+    verdict: result.verdict,
+    judgement: result.judgement,
+    primary_rule: result.rule ? { id: result.rule.id, cit: result.rule.cit || "", level: result.rule.level || "" } : null,
+    triggered: result.triggered.map(r => r.id)
+  };
+  const traceId = `SSE-${simpleHash(stableStringify(tracePayload))}`;
+
   let html = `<div><b>Judgement:</b> ${escapeHtml(result.judgement)}</div>`;
+  html += `<div style="margin-top:10px"><b>Trace ID:</b> <code>${escapeHtml(traceId)}</code></div>`;
   if (result.rule) {
     html += `<div style="margin-top:6px"><b>Primary Rule:</b> ${escapeHtml(result.rule.id)} — ${escapeHtml(result.rule.name)}</div>`;
     html += `<div><b>Group:</b> ${escapeHtml(result.rule.group || "")}</div>`;
+    if (result.rule.cit) html += `<div><b>Citation:</b> ${escapeHtml(result.rule.cit)}</div>`;
+    if (result.rule.level) html += `<div><b>Rule level:</b> ${escapeHtml(result.rule.level)}</div>`;
+    if (result.rule.status) html += `<div><b>Status:</b> ${escapeHtml(result.rule.status)}</div>`;
     if (result.rule.rationale) {
       html += `<div style="margin-top:6px"><b>Rationale:</b> ${escapeHtml(result.rule.rationale)}</div>`;
     }

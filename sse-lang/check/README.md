@@ -14,3 +14,8 @@ Input:
 - Example:
   Ion Path Dimensionality: 1D
   Path Continuity: discrete
+
+
+Step 3B additions:
+- rules.json now includes defaults + per-rule metadata (status, level, cit, tags)
+- output includes a Trace ID and Citation fields for academic referencing
