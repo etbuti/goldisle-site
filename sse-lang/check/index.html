@@ -27,11 +27,11 @@
 <body>
 <div class="wrap">
   <h1>SSE-Lang v0.1 — Infeasibility Judgement Endpoint</h1>
-  <div class="muted">Input format (v0.1 demo): one field per line, e.g. <code>Ion Path Dimensionality: 3D</code>. Click Check.</div>
+  <div class="muted">Input format (v0.1.1 syntax): write SSE-Lang statements, e.g. <code>IonPathDimensionality: #3D;</code> then <code>CHECK;</code>.</div>
 
   <div class="row" style="margin-top:12px">
     <div class="card">
-      <textarea id="input" placeholder="Paste key-value lines here..."></textarea>
+      <textarea id="input" placeholder="Paste SSE-Lang statements here (or legacy Key: Value lines)..."></textarea>
       <div style="display:flex; gap:10px; align-items:center; margin-top:10px">
         <button id="checkBtn">Check</button>
         <div class="muted">Supports: =, !=, &gt;= with ordinal scale for Data Reliability.</div>

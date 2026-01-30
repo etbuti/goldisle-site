@@ -42,6 +42,240 @@ function parseKeyValueLines(text, ruleset) {
   return map;
 }
 
+
+
+// -----------------------------
+// SSE-Lang v0.1.1 (Input Syntax) — Tokenize + Parse
+// Grammar (minimal):
+//   assign := ident (":"|"=") value ";"
+//   value  := number | "string" | #symbol | enumPath
+//   enumPath := ident ("." ident)*
+//   query := ("CHECK"|"EVAL") ";"
+// The parser returns a Map<canonicalField, normalizedValue>.
+// -----------------------------
+
+function isLikelySSELang(text) {
+  const t = (text || "").trim();
+  if (!t) return false;
+  // Heuristics: semicolons, CHECK/EVAL, hash-symbols, enum dots
+  if (t.includes(";")) return true;
+  if (/\b(CHECK|EVAL)\b/i.test(t)) return true;
+  if (/#\w+/.test(t)) return true;
+  if (/[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(t)) return true;
+  return false;
+}
+
+function tokenizeSSE(text) {
+  const src = text || "";
+  let i = 0, line = 1, col = 1;
+
+  const tokens = [];
+  const push = (type, value=null, loc=null) => tokens.push({ type, value, loc });
+
+  const locNow = () => ({ line, col, index: i });
+
+  const err = (msg) => {
+    const context = src.slice(Math.max(0, i - 20), Math.min(src.length, i + 20));
+    const caretPos = Math.min(20, i);
+    throw new Error(`SSE-Lang parse error: ${msg} at ${line}:${col}\n...${context}\n${" ".repeat(3+caretPos)}^`);
+  };
+
+  const isAlpha = (c) => /[A-Za-z_]/.test(c);
+  const isAlnum = (c) => /[A-Za-z0-9_\-]/.test(c);
+  const isDigit = (c) => /[0-9]/.test(c);
+
+  while (i < src.length) {
+    const c = src[i];
+
+    // whitespace
+    if (c === " " || c === "\t" || c === "\r") { i++; col++; continue; }
+    if (c === "\n") { i++; line++; col = 1; continue; }
+
+    // comments: //... or #!... (not to confuse with #symbol; we use #symbol only if followed by ident and not "#!")
+    if (c === "/" && src[i+1] === "/") {
+      i += 2; col += 2;
+      while (i < src.length && src[i] !== "\n") { i++; col++; }
+      continue;
+    }
+
+    // punctuation
+    if (c === ":") { push("COLON", ":", locNow()); i++; col++; continue; }
+    if (c === "=") { push("EQUAL", "=", locNow()); i++; col++; continue; }
+    if (c === ";") { push("SEMI", ";", locNow()); i++; col++; continue; }
+    if (c === ".") { push("DOT", ".", locNow()); i++; col++; continue; }
+
+    // string
+    if (c === '"') {
+      const start = locNow();
+      i++; col++;
+      let s = "";
+      while (i < src.length && src[i] !== '"') {
+        if (src[i] === "\n") err("Unterminated string literal");
+        // minimal escaping for \" and \\ 
+        if (src[i] === "\\" && i+1 < src.length) {
+          const n = src[i+1];
+          if (n === '"' || n === "\\") { s += n; i += 2; col += 2; continue; }
+        }
+        s += src[i]; i++; col++;
+      }
+      if (src[i] !== '"') err("Unterminated string literal");
+      i++; col++;
+      push("STRING", s, start);
+      continue;
+    }
+
+    // symbol: #ident  (reserve "#!" for potential future directives; treat as error now)
+    if (c === "#") {
+      const start = locNow();
+      if (src[i+1] === "!") err("Directive syntax '#!' not supported in v0.1.1 input");
+      i++; col++;
+      if (!isAlpha(src[i])) err("Expected identifier after '#'");
+      let name = "";
+      while (i < src.length && isAlnum(src[i])) { name += src[i]; i++; col++; }
+      push("SYMBOL", name, start);
+      continue;
+    }
+
+    // number: -?\d+(\.\d+)?
+    if (c === "-" || isDigit(c)) {
+      const start = locNow();
+      let j = i;
+      if (src[j] === "-") j++;
+      if (!isDigit(src[j])) {
+        // it's just '-' alone, not allowed
+        err("Unexpected '-'");
+      }
+      while (j < src.length && isDigit(src[j])) j++;
+      if (src[j] === "." && isDigit(src[j+1] || "")) {
+        j++;
+        while (j < src.length && isDigit(src[j])) j++;
+      }
+      const raw = src.slice(i, j);
+      i = j; col += (j - start.index);
+      push("NUMBER", raw, start);
+      continue;
+    }
+
+    // identifier / keywords
+    if (isAlpha(c)) {
+      const start = locNow();
+      let name = "";
+      while (i < src.length && isAlnum(src[i])) { name += src[i]; i++; col++; }
+      const upper = name.toUpperCase();
+      if (upper === "CHECK") push("KW_CHECK", upper, start);
+      else if (upper === "EVAL") push("KW_EVAL", upper, start);
+      else push("IDENT", name, start);
+      continue;
+    }
+
+    err(`Unexpected character '${c}'`);
+  }
+
+  push("EOF", null, locNow());
+  return tokens;
+}
+
+function parseSSELangProgram(text, ruleset) {
+  const toks = tokenizeSSE(text);
+  let k = 0;
+
+  const peek = () => toks[k];
+  const next = () => toks[k++];
+  const expect = (type) => {
+    const t = next();
+    if (t.type !== type) {
+      throw new Error(`SSE-Lang parse error: expected ${type} but got ${t.type} at ${t.loc?.line}:${t.loc?.col}`);
+    }
+    return t;
+  };
+
+  // alias mapping
+  const aliasToCanonical = new Map();
+  const aliases = ruleset.aliases || {};
+  for (const [canon, alist] of Object.entries(aliases)) {
+    aliasToCanonical.set(canon.toLowerCase(), canon);
+    for (const a of (alist || [])) aliasToCanonical.set(String(a).toLowerCase(), canon);
+  }
+  const canonKey = (key) => aliasToCanonical.get(String(key).toLowerCase()) || key;
+
+  const map = new Map();
+  let seenQuery = false;
+
+  const parseEnumPath = (firstIdent) => {
+    const parts = [firstIdent];
+    while (peek().type === "DOT") {
+      next(); // DOT
+      const id = expect("IDENT").value;
+      parts.push(id);
+    }
+    return parts;
+  };
+
+  const parseValue = () => {
+    const t = peek();
+    if (t.type === "NUMBER") {
+      next();
+      const raw = t.value;
+      const v = raw.includes(".") ? Number.parseFloat(raw) : Number.parseInt(raw, 10);
+      if (Number.isNaN(v)) throw new Error(`Invalid number: ${raw}`);
+      return v;
+    }
+    if (t.type === "STRING") { next(); return String(t.value); }
+    if (t.type === "SYMBOL") { next(); return String(t.value).toLowerCase(); } // #3D -> "3d"
+    if (t.type === "IDENT") {
+      const first = next().value;
+      const parts = parseEnumPath(first);
+      // enum normalization: take last segment by default (reliability.partial -> "partial")
+      return String(parts[parts.length - 1]).toLowerCase();
+    }
+    throw new Error(`SSE-Lang parse error: expected value at ${t.loc?.line}:${t.loc?.col}`);
+  };
+
+  const parseAssign = () => {
+    const keyTok = expect("IDENT");
+    const opTok = next();
+    if (opTok.type !== "COLON" && opTok.type !== "EQUAL") {
+      throw new Error(`SSE-Lang parse error: expected ':' or '=' at ${opTok.loc?.line}:${opTok.loc?.col}`);
+    }
+    const val = parseValue();
+    expect("SEMI");
+    const key = canonKey(keyTok.value);
+    // Also normalize strings/symbols to lower-case to match v0.1 comparer
+    const normVal = (typeof val === "string") ? val.toLowerCase().replace(/`/g, "") : val;
+    map.set(key, normVal);
+  };
+
+  const parseQuery = () => {
+    const t = next();
+    if (t.type !== "KW_CHECK" && t.type !== "KW_EVAL") {
+      throw new Error(`SSE-Lang parse error: expected CHECK/EVAL at ${t.loc?.line}:${t.loc?.col}`);
+    }
+    expect("SEMI");
+    seenQuery = true;
+  };
+
+  while (peek().type !== "EOF") {
+    const t = peek();
+    if (t.type === "IDENT") parseAssign();
+    else if (t.type === "KW_CHECK" || t.type === "KW_EVAL") parseQuery();
+    else {
+      throw new Error(`SSE-Lang parse error: unexpected token ${t.type} at ${t.loc?.line}:${t.loc?.col}`);
+    }
+  }
+
+  // For v0.1 demo we don't require CHECK; but if present, we treat as explicit.
+  return { map, seenQuery };
+}
+
+function parseSSELangOrLegacy(text, ruleset) {
+  if (isLikelySSELang(text)) {
+    const { map } = parseSSELangProgram(text, ruleset);
+    return map;
+  }
+  // fallback: legacy key-value lines
+  return parseKeyValueLines(text, ruleset);
+}
+
 function ordinalIndex(ruleset, field, value) {
   const scale = (ruleset.ordinal_scales || {})[field];
   if (!scale) return null;
@@ -217,16 +451,17 @@ async function main() {
   const btn = document.getElementById("checkBtn");
   btn.addEventListener("click", () => {
     const input = document.getElementById("input").value;
-    const map = parseKeyValueLines(input, ruleset);
+    const map = parseSSELangOrLegacy(input, ruleset);
     const result = decide(ruleset, map);
     renderResult(result);
   });
 
   // Load example
-  const example = `Ion Path Dimensionality: 3D
-Path Continuity: flexible
-Data Reliability: partial
-Count of attributes rated moderate or worse: 2`;
+  const example = `IonPathDimensionality: #3D;
+PathContinuity: #flexible;
+DataReliability: reliability.partial;
+ModerateOrWorseCount: 2;
+CHECK;`;
   document.getElementById("input").value = example;
 }
 main().catch(err => {
