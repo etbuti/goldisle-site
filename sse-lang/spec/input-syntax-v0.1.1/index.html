@@ -1,0 +1,186 @@
+SSE-Lang Input Syntax v0.1.1 (Public Checker)
+
+Status: Public demonstrator syntax for the SSE-Lang judgement endpoint.
+Scope: Defines the input language accepted by the public checker at /sse-lang/check/.
+Non-goal: This syntax does not disclose the full rule system; it only standardizes how inputs are expressed for feasibility screening.
+
+1. Overview
+
+The SSE-Lang judgement endpoint accepts a sequence of statements terminated by semicolons.
+Statements set semantic fields (key-value assignments) and may include an explicit evaluation command.
+
+Minimal pattern:
+Key: Value;
+...
+CHECK;
+
+The checker normalizes the parsed assignments into a field → value mapping and evaluates them against the SSE-Lang v0.1 infeasibility ruleset.
+
+2. Lexical Conventions
+
+2.1 Whitespace
+
+Spaces, tabs, and newlines may appear between tokens and do not affect meaning.
+
+2.2 Comments
+
+Single-line comments start with // and continue to end-of-line.
+
+IonPathDimensionality: #3D; // comment
+
+2.3 Identifiers
+
+Identifiers (ident) are used for keys and enum segments:
+	•	Must start with [A-Za-z_]
+	•	May contain [A-Za-z0-9_\-]
+
+Examples:
+	•	IonPathDimensionality
+	•	DataReliability
+	•	ModerateOrWorseCount
+
+3. Grammar (EBNF)
+program      := statement* EOF ;
+
+statement    := assign ";" 
+             | query ";" ;
+
+assign       := ident ( ":" | "=" ) value ;
+
+query        := "CHECK" | "EVAL" ;
+
+value        := number
+             | string
+             | symbol
+             | enumPath ;
+
+enumPath     := ident ( "." ident )* ;
+
+symbol       := "#" ident ;
+
+string       := '"' { CHAR - '"' } '"' ;
+
+ident        := /[A-Za-z_][A-Za-z0-9_\-]*/ ;
+number       := /-?\d+(\.\d+)?/ ;
+
+4. Semantics
+
+4.1 Assignments
+
+Assignments set a field value:
+
+IonPathDimensionality: #3D;
+DataReliability = reliability.partial;
+ModerateOrWorseCount: 2;
+
+Duplicate keys overwrite earlier values (last assignment wins).
+
+4.2 Evaluation Query
+
+The query statement is optional in the current public demonstrator:
+
+CHECK;
+
+	•	If present, it indicates an explicit evaluation point.
+	•	If absent, the checker still evaluates using all parsed assignments.
+
+Both CHECK; and EVAL; are accepted and equivalent in v0.1.1.
+
+In v0.1.1, CHECK/EVAL marks an evaluation point but does not introduce segmented or multi-stage execution.
+5. Normalization Rules (Critical for Reproducibility)
+
+The public checker applies the following normalizations before rule evaluation:
+
+5.1 Key Canonicalization
+
+Input keys are mapped to canonical rule fields using the ruleset alias table (rules.json → aliases).
+If a key matches an alias (case-insensitive), it is rewritten to the canonical field name.
+
+Example mapping (illustrative):
+	•	IonPathDimensionality → Ion Path Dimensionality
+	•	DataReliability → Data Reliability
+
+If no alias matches, the key is used as-is.
+
+5.2 Value Normalization
+
+Numbers
+	•	Parsed as integer or float.
+
+Strings
+	•	"..."
+	•	Preserved then lowercased for comparison.
+
+Symbols
+	•	#3D parses as the symbol 3D
+	•	Normalized to lower-case for evaluation: 3d
+
+Enum Paths
+	•	reliability.partial parses as segments ["reliability","partial"]
+	•	Normalized by taking the last segment and lowercasing: partial
+
+This is designed to allow domain-qualified enums without burdening v0.1 rule comparators.
+
+6. Examples
+
+6.1 Minimal Feasibility Check
+
+IonPathDimensionality: #3D;
+PathContinuity: #flexible;
+DataReliability: reliability.partial;
+ModerateOrWorseCount: 2;
+CHECK;
+
+6.2 Using Strings and Numbers
+
+SynthesisAccessibility: "difficult";
+ElectrochemicalWindow: 4.8;
+EVAL;
+
+6.3 With Comments
+
+IonPathDimensionality: #1D; // low dimensionality
+DataReliability: reliability.full;
+CHECK;
+
+7. Error Handling
+
+The parser reports:
+	•	A short error message
+	•	A line/column location
+	•	A context snippet with a caret pointer
+
+Typical errors:
+	•	Missing semicolon ;
+	•	Unterminated string "...
+	•	Unexpected character
+	•	Invalid value position
+
+String literals may not contain newlines in v0.1.1.
+
+8. Backward Compatibility (Legacy Input)
+
+For continuity, the public checker may also accept legacy “Key: Value” line format when the input does not resemble SSE-Lang syntax.
+
+Legacy example:
+
+Ion Path Dimensionality: 3D
+Data Reliability: partial
+Count of attributes rated moderate or worse: 2
+
+Note: Legacy support is provided for convenience and does not define the SSE-Lang syntax.
+
+9. Versioning Notes
+	•	v0.1.1 defines input syntax only for the public judgement endpoint.
+	•	SSE-Lang v0.1 rules remain the authoritative infeasibility criteria.
+	•	Future versions may extend:
+	•	typed units
+	•	structured semantic units
+	•	derived-field computation (e.g., automatically computing counts from ratings)
+	•	formal proof/trace exports
+
+    
+
+
+
+
