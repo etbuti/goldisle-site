@@ -44,9 +44,7 @@ function parseKeyValueLines(text, ruleset) {
 
 
 
-// SSE-Lang v0.1.1 (Input Syntax) — Tokenize + Parse
 //   assign := ident (":"|"=") value ";"
-//   enumPath := ident ("." ident)*
 // The parser returns a Map<canonicalField, normalizedValue>.
 
 function isLikelySSELang(text) {
@@ -228,13 +226,20 @@ function parseSSELangProgram(text, ruleset) {
 
   const parseAssign = () => {
     const keyTok = expect("IDENT");
+    // Allow dotted keys like Rating.Stability
+    let keyStr = keyTok.value;
+    while (peek().type === "DOT") {
+      next(); // consume DOT
+      const seg = expect("IDENT");
+      keyStr += "." + seg.value;
+    }
     const opTok = next();
     if (opTok.type !== "COLON" && opTok.type !== "EQUAL") {
       throw new Error(`SSE-Lang parse error: expected ':' or '=' at ${opTok.loc?.line}:${opTok.loc?.col}`);
     }
     const val = parseValue();
     expect("SEMI");
-    const key = canonKey(keyTok.value);
+    const key = canonKey(keyStr);
     // Also normalize strings/symbols to lower-case to match v0.1 comparer
     const normVal = (typeof val === "string") ? val.toLowerCase().replace(/`/g, "") : val;
     map.set(key, normVal);
@@ -263,9 +268,7 @@ function parseSSELangProgram(text, ruleset) {
 }
 
 
-// v0.2 demo: Derived Semantics (Computed Fields)
 // - Derives ModerateOrWorseCount from all Rating.* fields using an ordinal scale.
-// -----------------------------
 
 const RATING_SCALE = ["excellent","good","fair","moderate","poor","major","critical"];
 
