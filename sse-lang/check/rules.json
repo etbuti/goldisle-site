@@ -1,0 +1,240 @@
+{
+  "spec": "SSE-Lang",
+  "version": "0.1",
+  "source": "SSE-Lang_v0.1_InfeasibilityRules.md",
+  "input_format": {
+    "type": "key_value_lines",
+    "example": "Ion Path Dimensionality: 3D\nPath Continuity: flexible\nData Reliability: partial\nCount of attributes rated moderate or worse: 2"
+  },
+  "ordinal_scales": {
+    "Data Reliability": [
+      "speculative",
+      "partial",
+      "full"
+    ]
+  },
+  "aliases": {
+    "Ion Path Dimensionality": [
+      "IonPathDimensionality",
+      "Dimensionality"
+    ],
+    "Path Continuity": [
+      "PathContinuity"
+    ],
+    "Framework Rigidity": [
+      "FrameworkRigidity"
+    ],
+    "Electrochemical Window": [
+      "ElectrochemicalWindow"
+    ],
+    "Li-Metal Compatibility": [
+      "LiMetalCompatibility",
+      "Li Metal Compatibility"
+    ],
+    "Mechanical Match": [
+      "MechanicalMatch"
+    ],
+    "Interfacial Reaction": [
+      "InterfacialReaction"
+    ],
+    "Redox Risk": [
+      "RedoxRisk"
+    ],
+    "Synthesis Accessibility": [
+      "SynthesisAccessibility"
+    ],
+    "Material Complexity": [
+      "MaterialComplexity"
+    ],
+    "Count of attributes rated moderate or worse": [
+      "ModerateOrWorseCount",
+      "RiskCountModerateOrWorse"
+    ]
+  },
+  "rules": [
+    {
+      "id": "R1",
+      "group": "Group A — Structural No-Go",
+      "name": "Low-Dimensional Discrete Transport",
+      "if": [
+        {
+          "field": "Ion Path Dimensionality",
+          "op": "=",
+          "value": "1D",
+          "raw": "Ion Path Dimensionality = 1D"
+        },
+        {
+          "field": "Path Continuity",
+          "op": "=",
+          "value": "discrete",
+          "raw": "Path Continuity = discrete"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Isolated 1D pathways are highly sensitive to defects and disorder,\n\nmaking reliable transport impractical."
+    },
+    {
+      "id": "R2",
+      "group": "Group A — Structural No-Go",
+      "name": "Soft Framework with Narrow Stability Window",
+      "if": [
+        {
+          "field": "Framework Rigidity",
+          "op": "=",
+          "value": "soft",
+          "raw": "Framework Rigidity = soft"
+        },
+        {
+          "field": "Electrochemical Window",
+          "op": "=",
+          "value": "narrow",
+          "raw": "Electrochemical Window = narrow"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Flexible lattices under narrow electrochemical tolerance\n\nare structurally unstable in practical operation."
+    },
+    {
+      "id": "R3",
+      "group": "Group B — Interface No-Go",
+      "name": "Dual Failure at Lithium Metal Interface",
+      "if": [
+        {
+          "field": "Li-Metal Compatibility",
+          "op": "=",
+          "value": "hostile",
+          "raw": "Li-Metal Compatibility = hostile"
+        },
+        {
+          "field": "Mechanical Match",
+          "op": "=",
+          "value": "poor",
+          "raw": "Mechanical Match = poor"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Chemical instability combined with mechanical mismatch\n\nleads to inevitable interface failure."
+    },
+    {
+      "id": "R4",
+      "group": "Group B — Interface No-Go",
+      "name": "Uncontrolled Interfacial Redox Activity",
+      "if": [
+        {
+          "field": "Interfacial Reaction",
+          "op": "=",
+          "value": "aggressive",
+          "raw": "Interfacial Reaction = aggressive"
+        },
+        {
+          "field": "Redox Risk",
+          "op": "=",
+          "value": "high",
+          "raw": "Redox Risk = high"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Multiple uncontrolled reaction pathways prevent stable interface formation."
+    },
+    {
+      "id": "R5",
+      "group": "Group C — Engineering No-Go",
+      "name": "Non-Scalable High-Complexity Materials",
+      "if": [
+        {
+          "field": "Synthesis Accessibility",
+          "op": "=",
+          "value": "lab-only",
+          "raw": "Synthesis Accessibility = lab-only"
+        },
+        {
+          "field": "Material Complexity",
+          "op": "=",
+          "value": "complex",
+          "raw": "Material Complexity = complex"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Materials without realistic scale-up pathways\n\nare excluded from engineering feasibility."
+    },
+    {
+      "id": "R6",
+      "group": "Group C — Engineering No-Go",
+      "name": "Low-Confidence Data with Weak Structure",
+      "if": [
+        {
+          "field": "Data Reliability",
+          "op": "=",
+          "value": "speculative",
+          "raw": "Data Reliability = speculative"
+        },
+        {
+          "field": "Ion Path Dimensionality",
+          "op": "!=",
+          "value": "3D",
+          "raw": "Ion Path Dimensionality ≠ 3D"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Speculative data combined with non-robust transport topology\n\ncannot support meaningful reasoning."
+    },
+    {
+      "id": "R7",
+      "group": "Group D — Compound Risk",
+      "name": "Accumulated Medium Risk",
+      "if": [
+        {
+          "field": "Count of attributes rated moderate or worse",
+          "op": ">=",
+          "value": 4,
+          "raw": "Count of attributes rated moderate or worse ≥ 4"
+        }
+      ],
+      "then": {
+        "judgement": "Infeasible"
+      },
+      "rationale": "Multiple medium risks compound into systemic instability."
+    },
+    {
+      "id": "R8",
+      "group": "Group E — Conditional Exception",
+      "name": "High-Potential Flag",
+      "if": [
+        {
+          "field": "Ion Path Dimensionality",
+          "op": "=",
+          "value": "3D",
+          "raw": "Ion Path Dimensionality = 3D"
+        },
+        {
+          "field": "Path Continuity",
+          "op": "=",
+          "value": "flexible",
+          "raw": "Path Continuity = flexible"
+        },
+        {
+          "field": "Data Reliability",
+          "op": ">=",
+          "value": "partial",
+          "raw": "Data Reliability ≥ partial"
+        }
+      ],
+      "then": {
+        "judgement": "High-Potential / Requires Validation"
+      },
+      "rationale": "Exceptional transport topology may justify further investigation\n\ndespite unresolved risks."
+    }
+  ]
+}

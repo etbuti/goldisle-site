@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SSE-Lang v0.1 — Rule Checker</title>
+  <style>
+    body { font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin: 24px; line-height: 1.35; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    h1 { font-size: 20px; margin: 0 0 10px; }
+    .row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+    textarea { width: 100%; min-height: 260px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px; }
+    button { padding: 10px 14px; border-radius: 10px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: 600; }
+    button:hover { background: #f6f6f6; }
+    .card { border: 1px solid #e5e5e5; border-radius: 14px; padding: 14px; }
+    .verdict { font-size: 44px; font-weight: 800; letter-spacing: 0.6px; margin: 0; }
+    .verdict[data-state="no"] { color: #b00020; }
+    .verdict[data-state="yes"] { color: #0b6b0b; }
+    .muted { opacity: 0.75; font-size: 13px; }
+    ul { margin: 8px 0 0 18px; }
+    .footer { margin-top: 18px; font-size: 12px; opacity: 0.75; }
+    @media (max-width: 860px) {
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SSE-Lang v0.1 — Rule Checker (Yes / No)</h1>
+  <div class="muted">Input format: one field per line, e.g. <code>Ion Path Dimensionality: 3D</code>. Click Check.</div>
+
+  <div class="row" style="margin-top:12px">
+    <div class="card">
+      <textarea id="input" placeholder="Paste key-value lines here..."></textarea>
+      <div style="display:flex; gap:10px; align-items:center; margin-top:10px">
+        <button id="checkBtn">Check</button>
+        <div class="muted">Supports: =, !=, &gt;= with ordinal scale for Data Reliability.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="verdict" class="verdict" data-state="yes">—</div>
+      <div id="details" style="margin-top:8px"></div>
+      <div style="margin-top:12px">
+        <div class="muted"><b>Triggered rules</b> (matched all IF conditions):</div>
+        <ul id="triggered"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    This page evaluates <b>hard infeasibility rules</b> from SSE-Lang v0.1. It is an auxiliary checker, not a substitute for expert judgement.
+  </div>
+</div>
+
+<script src="./checker.js"></script>
+</body>
+</html>
