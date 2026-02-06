@@ -42,46 +42,103 @@
         Not for distribution, reproduction, public sharing, or re-uploading.
       </div>
 
-      <audio controls preload="none" controlsList="nodownload noplaybackrate">
-        <source src="/assets/audio/track_preview.mp3" type="audio/mpeg" />
-      </audio>
+<audio id="player" controls preload="none" controlsList="nodownload noplaybackrate">
+  <source src="https://goldisle.org/assets/audio/track_preview.mp3" type="audio/mpeg">
+  <!-- 国内备用源以后填 -->
+  <!-- <source src="https://CHINA_CDN_URL/track_preview.mp3" type="audio/mpeg"> -->
+</audio>
 
+      
 <div style="margin-top:16px">
-  <div class="note"><b>Quick notes (private)</b></div>
-  <textarea id="fb"
-    placeholder="e.g.
-0:00–0:30 intro mood
-1:12 vocal phrasing
-2:05 arrangement suggestion
-Credits / splits thoughts…"
-    style="width:100%;height:120px;
-    background:rgba(0,0,0,0.35);
-    color:#fff;
-    border:1px solid rgba(255,255,255,0.18);
-    border-radius:10px;
-    padding:10px;
-    font-size:13px;"></textarea>
+  <div class="note"><b>Quick notes</b>（建议：时间戳 + 一句话）</div>
 
-  <button onclick="copyFB()"
-    style="margin-top:8px;
-    padding:8px 12px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.18);
-    background:rgba(255,255,255,0.08);
-    color:#fff;
-    cursor:pointer;">
-    Copy feedback
-  </button>
+  <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+    <button type="button" onclick="insertTimestamp()"
+      style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+      Insert current timestamp
+    </button>
+
+    <button type="button" onclick="copyFB()"
+      style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+      Copy feedback
+    </button>
+  </div>
+
+  <textarea id="fb"
+    placeholder="示例：
+0:42 - 这里的情绪很好，但鼓点可再松一点
+1:12 - 人声咬字很对，建议加一点空间
+2:05 - 结构可以考虑再重复一次副歌
+署名/分工/比例想法：..."
+    style="width:100%;height:140px;margin-top:10px;
+    background:rgba(0,0,0,0.35);color:#fff;
+    border:1px solid rgba(255,255,255,0.18);border-radius:10px;
+    padding:10px;font-size:13px;"></textarea>
+
+  <div class="note" style="opacity:.75;margin-top:8px">
+    小技巧：按 <b>T</b> 插入当前时间戳；按 <b>Ctrl/Cmd + Enter</b> 复制反馈。
+  </div>
 </div>
 
 <script>
-function copyFB() {
-  const t = document.getElementById('fb');
-  t.select();
-  document.execCommand('copy');
-  alert('Feedback copied. You can paste it back to me.');
-}
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function formatTime(sec){
+    sec = Math.max(0, Math.floor(sec));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${pad2(s)}`;
+  }
+
+  function insertAtCursor(el, text){
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    el.value = el.value.slice(0, start) + text + el.value.slice(end);
+    const pos = start + text.length;
+    el.selectionStart = el.selectionEnd = pos;
+    el.focus();
+  }
+
+  function insertTimestamp(){
+    const a = document.getElementById('player');
+    const t = document.getElementById('fb');
+    const ts = a ? formatTime(a.currentTime || 0) : "0:00";
+    insertAtCursor(t, `${ts} - `);
+  }
+
+  async function copyFB(){
+    const t = document.getElementById('fb');
+    const v = (t.value || "").trim();
+    if (!v) { alert("No feedback yet."); return; }
+    try{
+      await navigator.clipboard.writeText(v);
+      alert("Feedback copied. Paste it back to me.");
+    }catch(e){
+      // fallback
+      t.select();
+      document.execCommand('copy');
+      alert("Feedback copied. Paste it back to me.");
+    }
+  }
+
+  // 快捷键：T 插入时间戳；Ctrl/Cmd+Enter 复制
+  document.addEventListener('keydown', (ev) => {
+    const active = document.activeElement;
+    const inText = active && active.id === 'fb';
+    if (!inText) return;
+
+    if (!ev.ctrlKey && !ev.metaKey && ev.key.toLowerCase() === 't') {
+      ev.preventDefault();
+      insertTimestamp();
+    }
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') {
+      ev.preventDefault();
+      copyFB();
+    }
+  });
 </script>
+
 
 <div class="note" style="margin-top:14px">
   💬 <b>Feedback tip</b><br/>
