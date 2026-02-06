@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Private Listening Room v3</title>
+
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<meta name="referrer" content="no-referrer" />
+
+<style>
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial; background:#0b0c10; color:#e8e8e8; }
+.wrap { max-width:960px; margin:40px auto; padding:0 18px; }
+.card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:18px; }
+h1 { font-size:18px; margin:0 0 10px; font-weight:600; }
+.note { font-size:12px; opacity:.86; line-height:1.6; margin-top:8px; }
+.small { font-size:12px; opacity:.72; margin-top:8px; }
+.hr { height:1px; background:rgba(255,255,255,0.12); margin:14px 0; }
+.row { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.col { flex:1 1 260px; min-width:240px; }
+
+input, select, textarea {
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(0,0,0,0.35);
+  color:#fff;
+  font-size:13px;
+  box-sizing:border-box;
+}
+textarea { height:150px; resize:vertical; }
+
+button {
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+}
+button:active { transform:translateY(1px); }
+
+.hidden { display:none; }
+.err { font-size:12px; color:#ffb3b3; margin-top:8px; display:none; }
+.pill { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.06); font-size:12px; }
+.muted { opacity:.7; }
+
+.badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.06); }
+.badge.ready { background:rgba(0,255,150,0.10); border-color:rgba(0,255,150,0.35); }
+.badge.work  { background:rgba(255,200,0,0.10); border-color:rgba(255,200,0,0.35); }
+.badge.final { background:rgba(120,160,255,0.10); border-color:rgba(120,160,255,0.35); }
+.kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas; background:rgba(255,255,255,0.08); padding:1px 6px; border-radius:6px; font-size:12px; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<!-- ========== GATE ========== -->
+<div class="card" id="gate">
+  <h1>Private Listening (Evaluation Only)</h1>
+  <div class="note">
+    Private listening only. Not for distribution, reproduction, or public sharing.
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <input id="pw" type="password" placeholder="Passcode" autocomplete="off" />
+      <div class="small muted">Tip: You may also receive a Magic Link (no passcode needed).</div>
+    </div>
+    <div>
+      <button onclick="enter()">Enter</button>
+    </div>
+  </div>
+
+  <div class="err" id="err">Invalid passcode.</div>
+  <div class="small muted">Keyboard: <span class="kbd">Enter</span> to unlock.</div>
+</div>
+
+<!-- ========== CONTENT ========== -->
+<div class="card hidden" id="content">
+
+  <div class="row" style="justify-content:space-between;align-items:flex-start">
+    <div>
+      <h1 style="margin:0">Listening Room <span class="pill">v3</span></h1>
+      <div class="note">
+        Library: <span class="pill" id="libName">—</span>
+        <span class="muted"> · Access:</span> <span class="pill" id="accessMode">—</span>
+        <span class="muted"> · Thread:</span> <span class="pill" id="threadPill">—</span>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button onclick="copyMagicLink()">Copy Magic Link</button>
+      <button onclick="copyThreadLink()">Copy Thread Link</button>
+      <button onclick="lock()">Lock</button>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+
+  <div class="note">
+    Status: <span id="statusBadge" class="badge work">—</span>
+    <span class="muted"> · Track:</span> <span class="pill" id="trackLine">—</span>
+    <span class="muted"> · Version:</span> <span class="pill" id="versionLine">—</span>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="note"><b>Select track</b></div>
+      <select id="trackSelect"></select>
+    </div>
+    <div class="col">
+      <div class="note"><b>Select version</b></div>
+      <select id="verSelect"></select>
+    </div>
+    <div class="col">
+      <div class="note"><b>Or type track code</b> (Enter)</div>
+      <input id="trackInput" placeholder="e.g. A01" />
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:12px">
+    Now playing: <span id="nowPlaying" class="muted">—</span>
+  </div>
+  <audio id="player" controls preload="none" controlsList="nodownload noplaybackrate"></audio>
+
+  <div class="row">
+    <button onclick="insertTimestamp()">Insert timestamp</button>
+    <button onclick="copyNotes()">Copy notes</button>
+    <button onclick="copyUpdateMsg()">Copy “Update” message</button>
+  </div>
+
+  <div class="hr"></div>
+
+  <div class="note">
+    <b>Notes</b> — press <b>T</b> for timestamp, <b>Ctrl/Cmd + Enter</b> to copy
+  </div>
+  <textarea id="fb" placeholder="0:42 - mood works well
+1:12 - vocal phrasing suggestion
+Credits/splits thoughts..."></textarea>
+
+  <div class="hr"></div>
+
+  <div class="note">
+    <b>Lyrics / Ideas</b> — paste text below
+  </div>
+  <textarea id="lyrics" placeholder="Paste lyrics / topline / ideas here"></textarea>
+
+  <div class="row">
+    <button onclick="copyPackage()">Copy package</button>
+    <button onclick="downloadTXT()">Download TXT</button>
+    <button onclick="openMail()">Send via email</button>
+    <button onclick="copyWhatsApp()">Copy WhatsApp text</button>
+    <button onclick="clearLyrics()">Clear</button>
+  </div>
+
+  <div class="small muted">
+    Workflow: pick track+version → listen → <span class="kbd">T</span> timestamps → paste lyrics/ideas → Copy package or Download TXT.
+  </div>
+
+</div>
+
+<div class="small muted" style="margin-top:14px; text-align:center;">
+  If playback is unstable due to network conditions, I can provide a local mirror link or a direct preview file.
+</div>
+
+</div>
+
+<script>
+/* ===========================
+   CONFIG
+   =========================== */
+
+// TODO 1) 曲库与口令（多口令 -> 多曲库）
+const LIBRARIES = {
+  "A-7F3K": {
+    name: "Collaborator A",
+    tracks: {
+      "A01": {
+        title: "Demo 1",
+        versions: {
+          "v1": { status:"working", note:"initial sketch", src:"https://goldisle.org/assets/audio/A01_v1.mp3", src_cn:"" },
+          "v2": { status:"ready",   note:"mix update",     src:"https://goldisle.org/assets/audio/A01_v2.mp3", src_cn:"" }
+        }
+      },
+      "A02": {
+        title: "Demo 2",
+        versions: {
+          "v1": { status:"ready", note:"timing fixed", src:"https://goldisle.org/assets/audio/A02_v1.mp3", src_cn:"" }
+        }
+      }
+    }
+  }
+};
+
+// TODO 2) 收件邮箱（mailto）
+const COLLAB_EMAIL = "your@email.com";
+
+// localStorage keys (per library + thread)
+const LS_KEY_BASE = "goldisle_listen_room_v3";
+
+/* ===========================
+   STATE
+   =========================== */
+let ACTIVE_LIB=null, ACTIVE_PASS=null;
+let ACTIVE_TRACK=null, ACTIVE_VER=null;
+let ACCESS_MODE="passcode";
+let THREAD_ID = null;
+
+/* ===========================
+   ELEMENTS
+   =========================== */
+const gateEl=document.getElementById("gate");
+const contentEl=document.getElementById("content");
+const errEl=document.getElementById("err");
+const pwEl=document.getElementById("pw");
+
+const libNameEl=document.getElementById("libName");
+const accessModeEl=document.getElementById("accessMode");
+const threadPillEl=document.getElementById("threadPill");
+
+const trackSelectEl=document.getElementById("trackSelect");
+const verSelectEl=document.getElementById("verSelect");
+const trackInputEl=document.getElementById("trackInput");
+
+const statusBadgeEl=document.getElementById("statusBadge");
+const trackLineEl=document.getElementById("trackLine");
+const versionLineEl=document.getElementById("versionLine");
+
+const nowPlayingEl=document.getElementById("nowPlaying");
+const playerEl=document.getElementById("player");
+const fbEl=document.getElementById("fb");
+const lyricsEl=document.getElementById("lyrics");
+
+/* ===========================
+   UTILS
+   =========================== */
+function pad(n){return String(n).padStart(2,"0")}
+function fmt(sec){sec=Math.floor(sec||0);return `${Math.floor(sec/60)}:${pad(sec%60)}`}
+function safe(s){return (s||"").toString().trim()}
+function qs(name){ return new URLSearchParams(location.search).get(name); }
+
+function nowStamp(){
+  const d=new Date();
+  const y=d.getFullYear(), m=pad(d.getMonth()+1), da=pad(d.getDate());
+  const hh=pad(d.getHours()), mm=pad(d.getMinutes()), ss=pad(d.getSeconds());
+  return `${y}${m}${da}_${hh}${mm}${ss}`;
+}
+
+function makeThreadIdIfMissing(){
+  // Prefer URL param; else generate lightweight id (not stored server-side)
+  const fromUrl = safe(qs("thread"));
+  if(fromUrl) return fromUrl;
+  // generate stable-ish per browser session if none
+  const gen = "T-" + Math.random().toString(36).slice(2,6).toUpperCase() + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
+  return gen;
+}
+
+function storageKey(){
+  const libKey = ACTIVE_PASS || "none";
+  const th = THREAD_ID || "no-thread";
+  return `${LS_KEY_BASE}:${libKey}:${th}`;
+}
+
+function saveState(){
+  try{
+    const data={ track:ACTIVE_TRACK, ver:ACTIVE_VER, notes:fbEl.value||"", lyrics:lyricsEl.value||"" };
+    localStorage.setItem(storageKey(), JSON.stringify(data));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(storageKey());
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+
+/* ===========================
+   ACCESS
+   =========================== */
+function enter(){
+  const pass=safe(pwEl.value);
+  unlock(pass,"passcode");
+}
+
+function unlock(pass,mode){
+  const lib=LIBRARIES[pass];
+  if(!lib){ errEl.style.display="block"; return false; }
+
+  ACTIVE_LIB=lib; ACTIVE_PASS=pass;
+  ACCESS_MODE=mode||"passcode";
+
+  // thread id
+  THREAD_ID = makeThreadIdIfMissing();
+
+  errEl.style.display="none";
+  gateEl.classList.add("hidden");
+  contentEl.classList.remove("hidden");
+
+  libNameEl.textContent=lib.name||"—";
+  accessModeEl.textContent=ACCESS_MODE;
+  threadPillEl.textContent=THREAD_ID;
+
+  renderTracks();
+
+  // allow preselect via params
+  const pTrack = safe(qs("track"));
+  const pVer   = safe(qs("ver"));
+  if(pTrack && ACTIVE_LIB.tracks[pTrack]) ACTIVE_TRACK=pTrack;
+
+  if(!ACTIVE_TRACK){
+    const codes=Object.keys(ACTIVE_LIB.tracks||{}).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    ACTIVE_TRACK=codes[0]||null;
+  }
+
+  renderVersions(ACTIVE_TRACK);
+
+  if(pVer && (ACTIVE_LIB.tracks[ACTIVE_TRACK]?.versions||{})[pVer]) ACTIVE_VER=pVer;
+  if(!ACTIVE_VER) ACTIVE_VER=pickDefaultVer(ACTIVE_TRACK);
+
+  // restore local draft (notes/lyrics) for this lib+thread
+  const st = loadState();
+  if(st){
+    if(st.track && ACTIVE_LIB.tracks[st.track]) ACTIVE_TRACK=st.track;
+    renderVersions(ACTIVE_TRACK);
+    const vers = ACTIVE_LIB.tracks[ACTIVE_TRACK]?.versions||{};
+    if(st.ver && vers[st.ver]) ACTIVE_VER=st.ver;
+
+    fbEl.value = st.notes || fbEl.value || "";
+    lyricsEl.value = st.lyrics || lyricsEl.value || "";
+  }
+
+  // sync UI
+  if(ACTIVE_TRACK) trackSelectEl.value=ACTIVE_TRACK;
+  renderVersions(ACTIVE_TRACK);
+  if(ACTIVE_VER) verSelectEl.value=ACTIVE_VER;
+
+  play(ACTIVE_TRACK,ACTIVE_VER,{autoplay:false});
+  saveState();
+  return true;
+}
+
+function lock(){
+  try{playerEl.pause()}catch(e){}
+  playerEl.innerHTML="";
+  contentEl.classList.add("hidden");
+  gateEl.classList.remove("hidden");
+  pwEl.value="";
+  ACTIVE_LIB=ACTIVE_PASS=ACTIVE_TRACK=ACTIVE_VER=null;
+  ACCESS_MODE="passcode";
+  THREAD_ID=null;
+}
+
+pwEl.addEventListener("keydown",(e)=>{ if(e.key==="Enter") enter(); });
+
+function copyMagicLink(){
+  if(!ACTIVE_PASS){ alert("Unlock a library first."); return; }
+  const url=new URL(location.href);
+  url.searchParams.set("k", ACTIVE_PASS);
+  url.searchParams.set("thread", THREAD_ID || makeThreadIdIfMissing());
+  navigator.clipboard.writeText(url.toString()).then(()=>alert("Magic Link copied.")).catch(()=>alert("Copy failed."));
+}
+
+function copyThreadLink(){
+  if(!ACTIVE_PASS){ alert("Unlock a library first."); return; }
+  const url=new URL(location.href);
+  url.searchParams.set("k", ACTIVE_PASS);
+  url.searchParams.set("thread", THREAD_ID || makeThreadIdIfMissing());
+  // do not force track/ver here
+  navigator.clipboard.writeText(url.toString()).then(()=>alert("Thread Link copied.")).catch(()=>alert("Copy failed."));
+}
+
+// auto unlock from magic link
+(function autoMagic(){
+  const k=safe(qs("k"));
+  if(k && LIBRARIES[k]){
+    unlock(k,"magiclink");
+  }
+})();
+
+/* ===========================
+   TRACKS / VERSIONS
+   =========================== */
+function renderTracks(){
+  trackSelectEl.innerHTML="";
+  const codes=Object.keys(ACTIVE_LIB.tracks||{}).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  if(!codes.length){
+    const o=document.createElement("option");
+    o.value=""; o.textContent="No tracks";
+    trackSelectEl.appendChild(o);
+    trackSelectEl.disabled=true;
+    return;
+  }
+  trackSelectEl.disabled=false;
+  for(const code of codes){
+    const t=ACTIVE_LIB.tracks[code];
+    const o=document.createElement("option");
+    o.value=code;
+    o.textContent=`${code} — ${t.title||"Untitled"}`;
+    trackSelectEl.appendChild(o);
+  }
+}
+
+function renderVersions(code){
+  verSelectEl.innerHTML="";
+  const vers=(ACTIVE_LIB.tracks?.[code]?.versions)||{};
+  const keys=Object.keys(vers).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  if(!keys.length){
+    const o=document.createElement("option");
+    o.value=""; o.textContent="No versions";
+    verSelectEl.appendChild(o);
+    verSelectEl.disabled=true;
+    return;
+  }
+  verSelectEl.disabled=false;
+  for(const v of keys){
+    const info=vers[v];
+    const st=info.status||"working";
+    const note=info.note?` · ${info.note}`:"";
+    const o=document.createElement("option");
+    o.value=v;
+    o.textContent=`${v} — ${st}${note}`;
+    verSelectEl.appendChild(o);
+  }
+}
+
+function pickDefaultVer(code){
+  const vers=(ACTIVE_LIB.tracks?.[code]?.versions)||{};
+  const keys=Object.keys(vers);
+  if(!keys.length) return null;
+  const ready=keys.find(k=>vers[k].status==="ready");
+  if(ready) return ready;
+  // else last by sort
+  return keys.sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})).slice(-1)[0];
+}
+
+trackSelectEl.addEventListener("change",(e)=>{
+  const code=e.target.value;
+  if(!code) return;
+  ACTIVE_TRACK=code;
+  renderVersions(code);
+  ACTIVE_VER=pickDefaultVer(code);
+  if(ACTIVE_VER) verSelectEl.value=ACTIVE_VER;
+  play(ACTIVE_TRACK,ACTIVE_VER,{autoplay:true});
+  saveState();
+});
+
+verSelectEl.addEventListener("change",(e)=>{
+  const v=e.target.value;
+  if(!v) return;
+  ACTIVE_VER=v;
+  play(ACTIVE_TRACK,ACTIVE_VER,{autoplay:true});
+  saveState();
+});
+
+trackInputEl.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    const code=safe(trackInputEl.value);
+    if(!code) return;
+    if(!ACTIVE_LIB.tracks[code]) return alert("Track not found in this library.");
+    ACTIVE_TRACK=code;
+    trackSelectEl.value=code;
+    renderVersions(code);
+    ACTIVE_VER=pickDefaultVer(code);
+    if(ACTIVE_VER) verSelectEl.value=ACTIVE_VER;
+    play(ACTIVE_TRACK,ACTIVE_VER,{autoplay:true});
+    saveState();
+  }
+});
+
+/* ===========================
+   PLAYBACK
+   =========================== */
+function setBadge(status){
+  const s=(status||"working").toLowerCase();
+  statusBadgeEl.className="badge "+(s==="ready"?"ready":(s==="final"?"final":"work"));
+  statusBadgeEl.textContent=s;
+}
+
+function play(code,ver,{autoplay=false}={}){
+  if(!ACTIVE_LIB||!code) return;
+  const track=ACTIVE_LIB.tracks[code];
+  if(!track) return;
+
+  const title=track.title||"Untitled";
+  const versions=track.versions||{};
+  const info=versions[ver] || versions[pickDefaultVer(code)];
+  if(!info) return alert("No playable version for this track.");
+
+  ACTIVE_VER = Object.keys(versions).find(k=>versions[k]===info) || ver;
+
+  const vLabel=ACTIVE_VER||"—";
+  nowPlayingEl.textContent=`${code} — ${title} · ${vLabel}`;
+  trackLineEl.textContent=`${code} — ${title}`;
+  versionLineEl.textContent=vLabel;
+  setBadge(info.status);
+
+  // rebuild sources (overseas then cn mirror)
+  playerEl.innerHTML="";
+  if(info.src){
+    const s1=document.createElement("source");
+    s1.src=info.src; s1.type="audio/mpeg";
+    playerEl.appendChild(s1);
+  }
+  if(info.src_cn){
+    const s2=document.createElement("source");
+    s2.src=info.src_cn; s2.type="audio/mpeg";
+    playerEl.appendChild(s2);
+  }
+  playerEl.load();
+
+  // prepend header into notes if not present (per thread)
+  const header = `Thread: ${THREAD_ID}\nLibrary: ${ACTIVE_LIB.name}\nTrack: ${code} — ${title}\nVersion: ${vLabel} (${info.status||"working"})\n---\n`;
+  if(!fbEl.value.startsWith("Thread:")){
+    fbEl.value = header + (fbEl.value||"");
+  }
+
+  if(autoplay) playerEl.play().catch(()=>{});
+}
+
+/* ===========================
+   NOTES SHORTCUTS
+   =========================== */
+function insertTimestamp(){
+  const ts=fmt(playerEl.currentTime||0);
+  const el=fbEl;
+  const start=el.selectionStart ?? el.value.length;
+  const end=el.selectionEnd ?? el.value.length;
+  const ins=`${ts} - `;
+  el.value = el.value.slice(0,start)+ins+el.value.slice(end);
+  const pos=start+ins.length;
+  el.selectionStart=el.selectionEnd=pos;
+  el.focus();
+  saveState();
+}
+
+async function copyNotes(){
+  const v=(fbEl.value||"").trim();
+  if(!v) return alert("No notes.");
+  try{ await navigator.clipboard.writeText(v); alert("Notes copied."); }
+  catch(e){ alert("Copy failed."); }
+}
+
+fbEl.addEventListener("keydown",(e)=>{
+  if(!e.ctrlKey && !e.metaKey && e.key.toLowerCase()==="t"){
+    e.preventDefault(); insertTimestamp();
+  }
+  if((e.ctrlKey||e.metaKey) && e.key==="Enter"){
+    e.preventDefault(); copyNotes();
+  }
+});
+
+fbEl.addEventListener("input", saveState);
+lyricsEl.addEventListener("input", saveState);
+
+/* ===========================
+   UPDATE MESSAGE
+   =========================== */
+function buildUpdateMsg(){
+  const code=ACTIVE_TRACK||"—";
+  const title=ACTIVE_LIB?.tracks?.[code]?.title || "Untitled";
+  const v=ACTIVE_VER||"—";
+  const st=ACTIVE_LIB?.tracks?.[code]?.versions?.[v]?.status || "working";
+
+  const url=new URL(location.href);
+  url.searchParams.set("k", ACTIVE_PASS||"");
+  url.searchParams.set("thread", THREAD_ID || makeThreadIdIfMissing());
+  url.searchParams.set("track", code);
+  url.searchParams.set("ver", v);
+
+  return `Update (${THREAD_ID}): ${code} — ${title} · ${v} (${st})
+Link: ${url.toString()}
+How: press T for timestamps; Ctrl/Cmd+Enter to copy notes; use Copy package / Download TXT for lyrics/ideas.`;
+}
+
+async function copyUpdateMsg(){
+  if(!ACTIVE_PASS) return alert("Unlock first.");
+  try{ await navigator.clipboard.writeText(buildUpdateMsg()); alert("Update message copied."); }
+  catch(e){ alert("Copy failed."); }
+}
+
+/* ===========================
+   PACKAGE + MAIL + WHATSAPP
+   =========================== */
+function buildPackage(){
+  const lib=ACTIVE_LIB?.name || "—";
+  const code=ACTIVE_TRACK || "—";
+  const title=ACTIVE_LIB?.tracks?.[code]?.title || "Untitled";
+  const v=ACTIVE_VER || "—";
+  const st=ACTIVE_LIB?.tracks?.[code]?.versions?.[v]?.status || "working";
+  const ts=fmt(playerEl.currentTime||0);
+
+  const notes=(fbEl.value||"").trim() || "(none)";
+  const lyr=(lyricsEl.value||"").trim() || "(none)";
+
+  return `[Private Collaboration Package]
+Thread: ${THREAD_ID}
+Library: ${lib}
+Track: ${code} — ${title}
+Version: ${v} (${st})
+Timestamp (at send): ${ts}
+
+— Notes —
+${notes}
+
+— Lyrics / Ideas —
+${lyr}
+`;
+}
+
+async function copyPackage(){
+  try{ await navigator.clipboard.writeText(buildPackage()); alert("Package copied."); }
+  catch(e){ alert("Copy failed."); }
+}
+
+function openMail(){
+  if(!COLLAB_EMAIL.includes("@")) return alert("Set COLLAB_EMAIL first.");
+  const subject = encodeURIComponent(`Private Listening — ${THREAD_ID} — ${ACTIVE_TRACK||""} ${ACTIVE_VER||""}`);
+  const body = encodeURIComponent(buildPackage());
+  location.href = `mailto:${encodeURIComponent(COLLAB_EMAIL)}?subject=${subject}&body=${body}`;
+}
+
+async function copyWhatsApp(){
+  try{ await navigator.clipboard.writeText(buildPackage()); alert("WhatsApp text copied. Paste into WhatsApp."); }
+  catch(e){ alert("Copy failed."); }
+}
+
+function clearLyrics(){
+  lyricsEl.value="";
+  lyricsEl.focus();
+  saveState();
+}
+
+/* ===========================
+   DOWNLOAD TXT (local export)
+   =========================== */
+function sanitizeFilePart(s){
+  return (s||"").toString().replace(/[^\w\-]+/g,"_").slice(0,40);
+}
+
+function downloadTXT(){
+  const code = sanitizeFilePart(ACTIVE_TRACK || "track");
+  const ver  = sanitizeFilePart(ACTIVE_VER || "v");
+  const th   = sanitizeFilePart(THREAD_ID || "thread");
+  const name = `Collab_${th}_${code}_${ver}_${nowStamp()}.txt`;
+
+  const blob = new Blob([buildPackage()], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  alert("TXT downloaded.");
+}
+
+/* ===========================
+   INIT
+   =========================== */
+window.addEventListener("load",()=>{
+  if(contentEl.classList.contains("hidden")) pwEl.focus();
+});
+</script>
+</body>
+</html>
