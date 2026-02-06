@@ -46,6 +46,49 @@
         <source src="/assets/audio/track_preview.mp3" type="audio/mpeg" />
       </audio>
 
+<div style="margin-top:16px">
+  <div class="note"><b>Quick notes (private)</b></div>
+  <textarea id="fb"
+    placeholder="e.g.
+0:00–0:30 intro mood
+1:12 vocal phrasing
+2:05 arrangement suggestion
+Credits / splits thoughts…"
+    style="width:100%;height:120px;
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;
+    padding:10px;
+    font-size:13px;"></textarea>
+
+  <button onclick="copyFB()"
+    style="margin-top:8px;
+    padding:8px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    cursor:pointer;">
+    Copy feedback
+  </button>
+</div>
+
+<script>
+function copyFB() {
+  const t = document.getElementById('fb');
+  t.select();
+  document.execCommand('copy');
+  alert('Feedback copied. You can paste it back to me.');
+}
+</script>
+
+<div class="note" style="margin-top:14px">
+  💬 <b>Feedback tip</b><br/>
+  Reply with timestamps (e.g. <code>0:42</code>) + notes on:
+  melody / arrangement / mix / structure / credits.
+</div>
+      
       <div class="note" style="margin-top:12px; opacity:.75">
         反馈建议：用时间戳（例如 1:12）+ 你的意见（编曲/旋律/混音/署名与比例）。
       </div>
