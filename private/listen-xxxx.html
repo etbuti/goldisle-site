@@ -1,1 +1,265 @@
-..
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Private Listening</title>
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <meta name="referrer" content="no-referrer" />
+  <style>
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial; background:#0b0c10; color:#e8e8e8; }
+    .wrap { max-width:720px; margin:40px auto; padding:0 18px; }
+    .card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:18px; }
+    h1 { font-size:18px; margin:0 0 10px; font-weight:600; }
+    .note { font-size:12px; opacity:.85; line-height:1.6; margin-top:10px; }
+    audio { width:100%; margin-top:10px; }
+    .row { display:flex; gap:8px; margin-top:12px; }
+    input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.18); background:rgba(0,0,0,0.35); color:#fff; }
+    button { padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.08); color:#fff; cursor:pointer; }
+    .hidden { display:none; }
+    .err { margin-top:10px; font-size:12px; color:#ffb3b3; display:none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="gate">
+      <h1>Private Listening (Evaluation Only)</h1>
+      <div class="note">
+        请输入口令进入试听。<br/>
+        <b>仅限内部评估</b>：请勿（就是礼貌地说禁止的意思）转发、外传、二次上传与公开播放。
+      </div>
+      <div class="row">
+        <input id="pw" type="password" placeholder="Passcode" autocomplete="off" />
+        <button onclick="enter()">Enter</button>
+      </div>
+      <div class="err" id="err">Passcode incorrect.</div>
+    </div>
+
+    <div class="card hidden" id="content">
+      <h1>Private Listening (Evaluation Only)</h1>
+      <div class="note">
+        <b>Private listening only.</b> For evaluation purposes.<br/>
+        Not for distribution, reproduction, public sharing, or re-uploading.
+      </div>
+
+<div style="margin-top:12px">
+  <div class="note"><b>Select track</b>（输入编号后回车）</div>
+
+  <input id="trackInput"
+    placeholder="e.g. 001 / 002 / 003"
+    style="width:100%;padding:10px 12px;
+    border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+    background:rgba(0,0,0,0.35);color:#fff;">
+</div>
+
+      
+<audio id="player" controls preload="none" controlsList="nodownload noplaybackrate">
+</audio>
+
+      <script>
+const input = document.getElementById("trackInput");
+const player = document.getElementById("player");
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const key = input.value.trim();
+    const track = TRACKS[key];
+    if (!track) {
+      alert("Track not found.");
+      return;
+    }
+    player.src = track.src;
+    player.load();
+    player.play();
+
+    // 给反馈区一个提示（可选）
+    const fb = document.getElementById("fb");
+    if (fb) {
+      fb.value =
+        `Track: ${key} – ${track.title}\n` +
+        (fb.value ? "\n" + fb.value : "");
+      fb.focus();
+    }
+  }
+});
+</script>
+
+      
+<div style="margin-top:16px">
+  <div class="note"><b>Quick notes</b>（建议：时间戳 + 一句话）</div>
+
+  <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+    <button type="button" onclick="insertTimestamp()"
+      style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+      Insert current timestamp
+    </button>
+
+    <button type="button" onclick="copyFB()"
+      style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+      Copy feedback
+    </button>
+  </div>
+
+  <textarea id="fb"
+    placeholder="示例：
+0:42 - 这里的情绪很好，但鼓点可再松一点
+1:12 - 人声咬字很对，建议加一点空间
+2:05 - 结构可以考虑再重复一次副歌
+署名/分工/比例想法：..."
+    style="width:100%;height:140px;margin-top:10px;
+    background:rgba(0,0,0,0.35);color:#fff;
+    border:1px solid rgba(255,255,255,0.18);border-radius:10px;
+    padding:10px;font-size:13px;"></textarea>
+
+  <div class="note" style="opacity:.75;margin-top:8px">
+    小技巧：按 <b>T</b> 插入当前时间戳；按 <b>Ctrl/Cmd + Enter</b> 复制反馈。
+  </div>
+</div>
+
+<script>
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function formatTime(sec){
+    sec = Math.max(0, Math.floor(sec));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${pad2(s)}`;
+  }
+
+  function insertAtCursor(el, text){
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    el.value = el.value.slice(0, start) + text + el.value.slice(end);
+    const pos = start + text.length;
+    el.selectionStart = el.selectionEnd = pos;
+    el.focus();
+  }
+
+  function insertTimestamp(){
+    const a = document.getElementById('player');
+    const t = document.getElementById('fb');
+    const ts = a ? formatTime(a.currentTime || 0) : "0:00";
+    insertAtCursor(t, `${ts} - `);
+  }
+
+  async function copyFB(){
+    const t = document.getElementById('fb');
+    const v = (t.value || "").trim();
+    if (!v) { alert("No feedback yet."); return; }
+    try{
+      await navigator.clipboard.writeText(v);
+      alert("Feedback copied. Paste it back to me.");
+    }catch(e){
+      // fallback
+      t.select();
+      document.execCommand('copy');
+      alert("Feedback copied. Paste it back to me.");
+    }
+  }
+
+  // 快捷键：T 插入时间戳；Ctrl/Cmd+Enter 复制
+  document.addEventListener('keydown', (ev) => {
+    const active = document.activeElement;
+    const inText = active && active.id === 'fb';
+    if (!inText) return;
+
+    if (!ev.ctrlKey && !ev.metaKey && ev.key.toLowerCase() === 't') {
+      ev.preventDefault();
+      insertTimestamp();
+    }
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') {
+      ev.preventDefault();
+      copyFB();
+    }
+  });
+</script>
+
+<div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+  <button type="button" onclick="addLine('Overall: 👍 Works well')">👍 Works</button>
+  <button type="button" onclick="addLine('Needs: structure / mix / vocal')">🛠 Needs tweak</button>
+  <button type="button" onclick="addLine('Credits/Splits: (my thoughts)')">© Credits/Splits</button>
+</div>
+
+<script>
+function addLine(s){
+  const t = document.getElementById('fb');
+  insertAtCursor(t, (t.value && !t.value.endsWith('\n') ? '\n' : '') + s + '\n');
+}
+</script>
+
+
+<div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+  <button type="button" onclick="copyText('WeChat: 13061381606')"
+    style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+    Copy my WeChat ID
+  </button>
+
+  <button type="button" onclick="copyText('WhatsApp: +447983995837')"
+    style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+    Copy my WhatsApp
+  </button>
+</div>
+      
+      
+<div class="note" style="margin-top:14px">
+  💬 <b>Feedback tip</b><br/>
+  Reply with timestamps (e.g. <code>0:42</code>) + notes on:
+  melody / arrangement / mix / structure / credits.
+</div>
+      
+      <div class="note" style="margin-top:12px; opacity:.75">
+        反馈建议：用时间戳（例如 1:12）+ 你的意见（编曲/旋律/混音/署名与比例）。
+      </div>
+    </div>
+  </div>
+
+  <script>
+const TRACKS = {
+  "001": {
+    title: "Track 001 – Demo A",
+    src: "https://goldisle.org/assets/audio/track_001.mp3"
+  },
+  "002": {
+    title: "Track 002 – Demo B",
+    src: "https://goldisle.org/assets/audio/track_002.mp3"
+  },
+  "003": {
+    title: "Track 003 – Demo C",
+    src: "https://goldisle.org/assets/audio/track_003.mp3"
+  }
+};
+</script>
+
+
+<script>
+async function copyText(s){
+  try{ await navigator.clipboard.writeText(s); alert("Copied."); }
+  catch(e){ alert("Copy failed. Please copy manually: " + s); }
+}
+</script>
+
+
+  
+  <script>
+    // ✅ 最简：口令明文（你说“就 123，仪式感”）
+    const PASS = "123";
+
+    function enter() {
+      const v = (document.getElementById("pw").value || "").trim();
+      if (v === PASS) {
+        document.getElementById("gate").classList.add("hidden");
+        document.getElementById("content").classList.remove("hidden");
+      } else {
+        const e = document.getElementById("err");
+        e.style.display = "block";
+      }
+    }
+    document.getElementById("pw").addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") enter();
+    });
+  </script>
+</body>
+</html>
