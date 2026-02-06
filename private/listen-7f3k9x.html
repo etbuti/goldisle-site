@@ -139,7 +139,20 @@
   });
 </script>
 
+<div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+  <button type="button" onclick="addLine('Overall: 👍 Works well')">👍 Works</button>
+  <button type="button" onclick="addLine('Needs: structure / mix / vocal')">🛠 Needs tweak</button>
+  <button type="button" onclick="addLine('Credits/Splits: (my thoughts)')">© Credits/Splits</button>
+</div>
 
+<script>
+function addLine(s){
+  const t = document.getElementById('fb');
+  insertAtCursor(t, (t.value && !t.value.endsWith('\n') ? '\n' : '') + s + '\n');
+}
+</script>
+
+      
 <div class="note" style="margin-top:14px">
   💬 <b>Feedback tip</b><br/>
   Reply with timestamps (e.g. <code>0:42</code>) + notes on:
@@ -152,6 +165,29 @@
     </div>
   </div>
 
+<div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+  <button type="button" onclick="copyText('WeChat: 13061381606')"
+    style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+    Copy my WeChat ID
+  </button>
+
+  <button type="button" onclick="copyText('WhatsApp: +447983995837')"
+    style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.08);color:#fff;cursor:pointer;">
+    Copy my WhatsApp
+  </button>
+</div>
+
+<script>
+async function copyText(s){
+  try{ await navigator.clipboard.writeText(s); alert("Copied."); }
+  catch(e){ alert("Copy failed. Please copy manually: " + s); }
+}
+</script>
+
+
+  
   <script>
     // ✅ 最简：口令明文（你说“就 123，仪式感”）
     const PASS = "123";
