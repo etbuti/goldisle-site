@@ -1,0 +1,24 @@
+{
+  "portal": "goldisle",
+  "role": "entry-node",
+  "canonical": "https://portal.goldisle.org/",
+  "root_key": "GOLDISLE-PORTAL-A01",
+  "description": "Minimal portal entry for identity, provenance, and machine-readable references.",
+  "routes": [
+    {
+      "name": "main",
+      "url": "https://goldisle.org/"
+    },
+    {
+      "name": "portal",
+      "url": "https://portal.goldisle.org/"
+    }
+  ],
+  "contact": "mailto:contact@goldisle.org",
+  "integrity": {
+    "dnssec": true,
+    "acme": true,
+    "dmarc": true
+  },
+  "version": "1.0"
+}
