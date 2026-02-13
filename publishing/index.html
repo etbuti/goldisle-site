@@ -44,75 +44,191 @@
   </script>
 
   <style>
-    :root{--w:860px;--lh:1.65;}
-    body{margin:0;font-family:"Times New Roman",Times,serif;line-height:var(--lh);}
-    main{max-width:var(--w);margin:48px auto;padding:0 18px;}
-    h1{font-size:28px;margin:0 0 8px;}
-    h2{font-size:18px;margin:26px 0 10px;}
-    p,li{font-size:16px;}
-    .meta{font-size:14px;}
-    .hr{border-top:1px solid #000;margin:18px 0 22px;}
-    a{color:#000;text-decoration:underline;}
+    :root{
+      --w: 860px;
+      --lh: 1.65;
+      --ink: #000;
+      --muted: rgba(0,0,0,.62);
+      --hair: rgba(0,0,0,.14);
+      --hair2: rgba(0,0,0,.08);
+    }
+
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:"Times New Roman", Times, serif;
+      line-height: var(--lh);
+      color: var(--ink);
+      background:#fff;
+    }
+
+    a{ color: var(--ink); text-decoration: underline; }
+
+    main{
+      max-width: var(--w);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    h1{ font-size: 28px; font-weight: normal; margin: 0 0 8px; }
+    h2{ font-size: 18px; font-weight: normal; margin: 26px 0 10px; }
+    p, li{ font-size: 16px; }
+    .meta{ font-size: 14px; color: var(--muted); }
+    .hr{ border-top: 1px solid var(--ink); margin: 18px 0 22px; }
+
+    /* ===== Immersive Spine Hero ===== */
+    .hero-wrap{
+      min-height: 92vh;
+      display: grid;
+      place-items: center;
+      padding: 56px 0 24px;
+    }
+
+    .hero{
+      width: 100%;
+      max-width: 860px;
+      text-align: center;
+    }
+
+    .hero .imprint{
+      font-size: 13px;
+      letter-spacing: .05em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .hero .title{
+      font-size: 34px;
+      font-weight: normal;
+      margin: 0 0 18px;
+    }
+
+    .hero .subline{
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .spine-stage{
+      margin: 18px auto 18px;
+      max-width: 760px;
+      perspective: 1100px;
+    }
+
+    .spine-card{
+      border: 1px solid var(--hair2);
+      background: #fff;
+      box-shadow: 0 18px 50px rgba(0,0,0,.06);
+      transform: rotateX(10deg) rotateY(-10deg) translateY(0);
+      transition: transform .6s ease, box-shadow .6s ease;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .spine-card:hover{
+      transform: rotateX(0deg) rotateY(0deg) translateY(-6px);
+      box-shadow: 0 28px 70px rgba(0,0,0,.10);
+    }
+
+    .spine-card img{
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .series-line{
+      font-size: 14px;
+      color: var(--muted);
+      margin: 14px 0 16px;
+    }
+
+    .hero-actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .btn{
+      display:inline-block;
+      padding: 10px 14px;
+      border: 1px solid var(--hair);
+      text-decoration: none;
+      font-size: 14px;
+      color: var(--ink);
+      background: #fff;
+    }
+    .btn:hover{ border-color: rgba(0,0,0,.28); }
+
+    .scroll{
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(0,0,0,.45);
+    }
+    .scroll a{ color: rgba(0,0,0,.45); text-decoration:none; border-bottom:1px solid rgba(0,0,0,.18); }
+
+    /* Section spacing after hero */
+    .content{
+      padding: 10px 0 52px;
+    }
+
+    /* Lists look calm */
+    ul{ margin: 10px 0 0 18px; }
+    li{ margin: 6px 0; }
+
+    /* Small divider between blocks */
+    .hairline{ border-top: 1px solid var(--hair); margin: 16px 0 14px; }
+
+    @media (max-width: 520px){
+      .hero .title{ font-size: 28px; }
+      .spine-stage{ max-width: 100%; }
+      .btn{ width: 100%; text-align:center; }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .spine-card, .spine-card:hover{ transition:none; transform:none; }
+    }
   </style>
 </head>
+
 <body>
-  <main>
+  <!-- Immersive Spine Hero -->
+  <div class="hero-wrap">
+    <div class="hero">
+      <div class="imprint">Goldisle Publishing</div>
+      <div class="title">Sound as Event Booklets</div>
+      <div class="subline">Forthcoming research series · London</div>
 
-<!-- Goldisle Publishing · Minimal Hero -->
-<section aria-label="Publisher Hero"
-style="
-max-width:860px;
-margin:80px auto 60px;
-padding:0 18px;
-font-family:'Times New Roman',Times,serif;
-line-height:1.6;
-text-align:center;
-">
+      <div class="spine-stage">
+        <div class="spine-card">
+          <img
+            src="/publishing/assets/sound-as-event-booklets-shelf-blueprint.png"
+            alt="Sound as Event Booklets — series blueprint (No.1 Breath, No.2 Pulse, No.3 Voice)"
+            loading="lazy"
+          />
+        </div>
+      </div>
 
-  <!-- Imprint line -->
-  <div style="font-size:13px;letter-spacing:.04em;">
-    Goldisle Publishing
+      <div class="series-line">
+        No.1 — Breath &nbsp;&nbsp;·&nbsp;&nbsp; No.2 — Pulse &nbsp;&nbsp;·&nbsp;&nbsp; No.3 — Voice
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn" href="/series/sound-as-event-booklets/">View Series</a>
+        <a class="btn" href="/publications/">Catalogue</a>
+        <a class="btn" href="mailto:toptrust@gmail.com?subject=Goldisle%20Publishing%20%E2%80%94%20Series%20Inquiry">Contact</a>
+      </div>
+
+      <div class="scroll">
+        <a href="#publisher">Enter</a>
+      </div>
+    </div>
   </div>
 
-  <!-- Series Title -->
-  <h1 style="
-  font-size:32px;
-  font-weight:normal;
-  margin:18px 0 24px;
-  ">
-    Sound as Event Booklets
-  </h1>
-
-  <!-- Hero Image -->
-  <img
-    src="/publishing/assets/sound-as-event-booklets-shelf-blueprint.png"
-    alt="Sound as Event Booklets — series blueprint"
-    style="
-      width:100%;
-      max-width:720px;
-      display:block;
-      margin:0 auto 24px;
-      border:1px solid #eee;
-    "
-    loading="lazy"
-  />
-
-  <!-- Minimal Series Line -->
-  <div style="font-size:14px;opacity:.75;">
-    No.1 — Breath &nbsp;&nbsp;·&nbsp;&nbsp;
-    No.2 — Pulse &nbsp;&nbsp;·&nbsp;&nbsp;
-    No.3 — Voice
-  </div>
-
-  <!-- Forthcoming Note -->
-  <div style="margin-top:18px;font-size:13px;opacity:.55;">
-    Independent research series · London
-  </div>
-
-</section>
-
- View Series →   
-    
+  <main class="content" id="publisher">
     <h1>Goldisle Publishing</h1>
     <p class="meta">Independent ISBN Publisher · London, UK</p>
     <div class="hr"></div>
@@ -125,96 +241,11 @@ text-align:center;
 
     <h2>Series</h2>
     <ul>
-      <li><a href="/series/sound-as-event-booklets/">Goldisle Publishing presents <br>Sound as Event Booklets</a></li>
+      <li><a href="/series/sound-as-event-booklets/">Sound as Event Booklets</a></li>
     </ul>
 
-    
-<!-- Goldisle Publishing · Hero Blueprint (drop-in section)
-     Place inside <main> near the top of: https://goldisle.org/publishing/
-     Assumes your image is located at: /publishing/assets/sound-as-event-booklets-shelf-blueprint.png
--->
-<section aria-label="Forthcoming series" style="max-width:860px;margin:48px auto;padding:0 18px;font-family:'Times New Roman',Times,serif;line-height:1.65;">
-  <!-- Imprint header (low-noise) -->
-  <div style="font-size:14px;letter-spacing:.02em;">
-    <a href="/publishing/" style="color:#000;text-decoration:underline;">Goldisle Publishing</a>
-    <span style="opacity:.65;"> · Independent ISBN Publisher · London, UK</span>
-  </div>
+    <div class="hairline"></div>
 
-  <!-- Series headline -->
-  <h1 style="font-size:30px;font-weight:normal;margin:14px 0 8px;">
-    Sound as Event Booklets
-  </h1>
-
-  <!-- Forthcoming note -->
-  <div style="font-size:14px;opacity:.75;margin:0 0 18px;">
-    Forthcoming research series · Series identity established · First title in preparation
-  </div>
-
-  <!-- Hero image -->
-  <figure style="margin:0;">
-    <img
-      src="/publishing/assets/sound-as-event-booklets-shelf-blueprint.png"
-      alt="Sound as Event Booklets — three-volume series blueprint (Breath, Pulse, Voice)"
-      style="width:100%;height:auto;display:block;border:1px solid #eee;"
-      loading="lazy"
-    />
-    <figcaption style="font-size:12px;opacity:.65;margin-top:8px;">
-      Series blueprint: No.1 Breath · No.2 Pulse · No.3 Voice
-    </figcaption>
-  </figure>
-
-  <!-- Series statement + minimal TOC -->
-  <div style="margin-top:18px;display:grid;grid-template-columns:1fr;gap:14px;">
-    <p style="margin:0;font-size:16px;">
-      Goldisle Publishing introduces a sequence of conceptual research booklets exploring sound as an event rather than an object.
-      Each volume isolates one condition of occurrence and links forward to the next: initiation, temporal decision, and execution.
-    </p>
-
-    <div style="font-size:15px;">
-      <div style="border-top:1px solid #000;margin:14px 0 12px;"></div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:6px;">
-        <div>
-          <span style="opacity:.7;">No.1</span> — <strong style="font-weight:normal;">Breath as Event</strong>
-          <span style="opacity:.7;"> · initiation threshold</span>
-        </div>
-        <div>
-          <span style="opacity:.7;">No.2</span> — <strong style="font-weight:normal;">Pulse as Event</strong>
-          <span style="opacity:.7;"> · temporal decision</span>
-        </div>
-        <div>
-          <span style="opacity:.7;">No.3</span> — <strong style="font-weight:normal;">Voice as Event</strong>
-          <span style="opacity:.7;"> · execution and presence</span>
-        </div>
-      </div>
-
-      <!-- Primary actions -->
-      <div style="margin-top:14px;font-size:14px;">
-        <a href="/series/sound-as-event-booklets/" style="color:#000;text-decoration:underline;">View series page</a>
-        <span style="opacity:.55;"> · </span>
-        <a href="/publications/" style="color:#000;text-decoration:underline;">Catalogue</a>
-        <span style="opacity:.55;"> · </span>
-        <a href="mailto:toptrust@gmail.com?subject=Goldisle%20Publishing%20%E2%80%94%20Series%20Inquiry&body=Hello%20Goldisle%20Publishing%2C%0A%0AI%20would%20like%20to%20inquire%20about%20Sound%20as%20Event%20Booklets%20and%20forthcoming%20titles.%0A%0AName%3A%0AContext%3A%0A%0A"
-           style="color:#000;text-decoration:underline;">Contact</a>
-      </div>
-
-      <!-- Optional: very low-noise rights/ISBN note -->
-      <div style="margin-top:10px;font-size:12px;opacity:.6;">
-        Titles are released within an ISBN-registered publishing framework. Individual ISBN records appear on each title page upon release.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Optional: responsive tweak (keep it single-file, low-noise) -->
-<style>
-@media (min-width: 860px){
-  /* keep the hero copy comfortably readable */
-  section[aria-label="Forthcoming series"] { padding-left: 0; padding-right: 0; }
-}
-</style>
-
-    
     <h2>Catalogue</h2>
     <p><a href="/publications/">Publications</a></p>
 
