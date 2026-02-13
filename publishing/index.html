@@ -88,6 +88,8 @@
       width: 100%;
       max-width: 860px;
       text-align: center;
+      padding: 0 18px; /* ensures hero aligns with main on mobile */
+      box-sizing: border-box;
     }
 
     .hero .imprint{
@@ -130,10 +132,22 @@
       box-shadow: 0 28px 70px rgba(0,0,0,.10);
     }
 
+    /* picture compatibility */
+    .spine-card picture{ display:block; }
     .spine-card img{
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    .img-fallback{
+      display:none;
+      padding: 18px 16px;
+      font-size: 13px;
+      color: rgba(0,0,0,.55);
+      border-top: 1px solid var(--hair2);
+      background: #fff;
+      text-align: left;
     }
 
     .series-line{
@@ -173,11 +187,9 @@
       padding: 10px 0 52px;
     }
 
-    /* Lists look calm */
     ul{ margin: 10px 0 0 18px; }
     li{ margin: 6px 0; }
 
-    /* Small divider between blocks */
     .hairline{ border-top: 1px solid var(--hair); margin: 16px 0 14px; }
 
     @media (max-width: 520px){
@@ -186,7 +198,6 @@
       .btn{ width: 100%; text-align:center; }
     }
 
-    /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       .spine-card, .spine-card:hover{ transition:none; transform:none; }
@@ -195,7 +206,6 @@
 </head>
 
 <body>
-  <!-- Immersive Spine Hero -->
   <div class="hero-wrap">
     <div class="hero">
       <div class="imprint">Goldisle Publishing</div>
@@ -204,18 +214,28 @@
 
       <div class="spine-stage">
         <div class="spine-card">
-  <img
+
+          <!-- WEBP preferred, JPG fallback -->
           <picture>
-  <source 
-    srcset="/publishing/assets/sound-as-event-booklets-shelf-blueprint.webp"
-    type="image/webp">
-  <img
-    src="/publishing/assets/sound-as-event-booklets-shelf-blueprint.jpg"
-    alt="Sound as Event Booklets — series blueprint"
-    style="width:100%;height:auto;display:block;"
-    loading="lazy"
-  />
-</picture>
+            <source
+              srcset="/publishing/assets/sound-as-event-booklets-shelf-blueprint.webp"
+              type="image/webp">
+            <img
+              src="/publishing/assets/sound-as-event-booklets-shelf-blueprint.jpg"
+              alt="Sound as Event Booklets — series blueprint (No.1 Breath, No.2 Pulse, No.3 Voice)"
+              loading="lazy"
+              onerror="this.closest('.spine-card').querySelector('.img-fallback').style.display='block'; this.style.display='none';"
+            />
+          </picture>
+
+          <!-- If image fails, you will see this -->
+          <div class="img-fallback">
+            Image not found. Check the file path:<br>
+            <span style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
+              /publishing/assets/sound-as-event-booklets-shelf-blueprint.webp<br>
+              /publishing/assets/sound-as-event-booklets-shelf-blueprint.jpg
+            </span>
+          </div>
 
         </div>
       </div>
