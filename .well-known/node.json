@@ -1,0 +1,22 @@
+{
+  "node": "goldisle-portal",
+  "role": "portal",
+  "root_key": "GOLDISLE-PORTAL-A01",
+  "canonical": "https://portal.goldisle.org/",
+  "owner": {
+    "name": "Evan Bei",
+    "legal_name": "Xiaojun Yin",
+    "type": "individual-origin node"
+  },
+  "lineage": "Isle of Not Alone · Goldisle Light Org",
+  "contact": "mailto:contact@goldisle.org",
+  "pointers": {
+    "main_site": "https://goldisle.org/",
+    "portal": "https://portal.goldisle.org/"
+  },
+  "signature": {
+    "status": "public-root",
+    "dnssec_expected": true
+  },
+  "version": "1.0"
+}
