@@ -3,21 +3,11 @@
   "id": "did:web:goldisle.org",
   "controller": "did:web:evanbei.com",
   "alsoKnownAs": ["https://goldisle.org/"],
-  "verificationMethod": [
-    {
-      "id": "did:web:evanbei.com#key-azPbi1lh",
-      "type": "Ed25519VerificationKey2020",
-      "controller": "did:web:evanbei.com",
-      "publicKeyMultibase": "z5Ba332cdn5mVjw3VpswYQG6g62hC3nqm9G99Y5mxeFjt"
-    }
-  ],
-  "assertionMethod": ["did:web:evanbei.com#key-azPbi1lh"],
-  "authentication": ["did:web:evanbei.com#key-azPbi1lh"],
   "service": [
     {
-      "id": "#portal",
-      "type": "PortalNode",
-      "serviceEndpoint": "https://goldisle.org/data/portal.json"
+      "id": "#identity",
+      "type": "IdentitySignature",
+      "serviceEndpoint": "https://goldisle.org/.well-known/identity.sig.json"
     },
     {
       "id": "#node",
@@ -25,9 +15,9 @@
       "serviceEndpoint": "https://goldisle.org/.well-known/node.json"
     },
     {
-      "id": "#kpi-web3",
-      "type": "KPIWeb3Registry",
-      "serviceEndpoint": "https://goldisle.org/.well-known/kpi-web3.json"
+      "id": "#portal",
+      "type": "PortalNode",
+      "serviceEndpoint": "https://goldisle.org/data/portal.json"
     }
   ]
 }
