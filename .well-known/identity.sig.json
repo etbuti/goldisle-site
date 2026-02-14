@@ -1,0 +1,19 @@
+{
+  "subject": "Goldisle Publishing Node",
+  "legal_name": "Goldisle Publishing (operator: Xiaojun Yin)",
+  "identity_root": "https://goldisle.org/",
+  "did": "did:web:goldisle.org",
+  "controller_did": "did:web:evanbei.com",
+  "controller_identity_root": "https://evanbei.com/",
+  "identity_state": "frozen-v1",
+  "claims": [
+    "https://goldisle.org/",
+    "https://goldisle.org/.well-known/node.json",
+    "https://goldisle.org/data/portal.json"
+  ],
+  "key_type": "ed25519",
+  "public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID4j6J+tgLj4JDh0aM4EdfKKNaDBv0wZKDrMJ0joSUHn Evan Bei Identity Root",
+  "issued_at": "2026-02-14T00:00:00Z",
+  "version": "1.0",
+  "ssh_signature": "TBD"
+}
