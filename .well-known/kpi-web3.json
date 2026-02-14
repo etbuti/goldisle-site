@@ -1,0 +1,17 @@
+{
+  "kpi": "goldisle-kpi-web3",
+  "version": "1.0",
+  "issuer": "did:web:goldisle.org",
+  "controller": "did:web:evanbei.com",
+  "updated": "2026-02-14T00:00:00Z",
+  "endpoints": {
+    "portal": "https://goldisle.org/data/portal.json",
+    "node": "https://goldisle.org/.well-known/node.json"
+  },
+  "proof": {
+    "type": "TBD",
+    "created": "2026-02-14T00:00:00Z",
+    "verificationMethod": "did:web:evanbei.com#key-1",
+    "proofValue": "TBD"
+  }
+}
