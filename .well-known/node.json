@@ -9,6 +9,16 @@
 "capabilities": {
   "kpi": "https://goldisle.org/.well-known/kpi-web3.json"
 },
+
+"canonicalization": {
+  "format": "json",
+  "method": "jq-sort-keys",
+  "rules": {
+    "identity": "del(.ssh_signature) | jq -S .",
+    "kpi": "del(.proof.proofValue) | jq -S ."
+  },
+  "signature_namespace": "evanbei_identity"
+},
   
   "node": "goldisle-portal",
   "role": "portal",
