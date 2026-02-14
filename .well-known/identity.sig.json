@@ -15,5 +15,5 @@
   "public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID4j6J+tgLj4JDh0aM4EdfKKNaDBv0wZKDrMJ0joSUHn Evan Bei Identity Root",
   "issued_at": "2026-02-14T00:00:00Z",
   "version": "1.0",
-  "ssh_signature": "TBD"
+  "ssh_signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgPiPon62AuPgkOHRozgR18oo1oM\nG/TBkoOswnSOhJQecAAAAQZXZhbmJlaV9pZGVudGl0eQAAAAAAAAAGc2hhNTEyAAAAUwAA\nAAtzc2gtZWQyNTUxOQAAAEBHLrq/0tZJsq5oePaAzwUwW0DJBskfjYufabmjM6k99OnN/I\nQYAcubJOg05Vax46p8I61qQ/2UxZiam4EiXiYG\n-----END SSH SIGNATURE-----"
 }
