@@ -18,5 +18,10 @@
       "type": "OriginNodeDescriptor",
       "serviceEndpoint": "https://goldisle.org/.well-known/node.json"
     }
+    {
+  "id": "#kpi-web3",
+  "type": "KPIWeb3Registry",
+  "serviceEndpoint": "https://goldisle.org/.well-known/kpi-web3.json"
+    }
   ]
 }
