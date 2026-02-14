@@ -5,6 +5,11 @@
     "node_identity": "https://goldisle.org/.well-known/identity.sig.json",
     "control_proof": "ssh-ed25519"
   },
+
+"capabilities": {
+  "kpi": "https://goldisle.org/.well-known/kpi-web3.json"
+},
+  
   "node": "goldisle-portal",
   "role": "portal",
   "root_key": "GOLDISLE-PORTAL-A01",
