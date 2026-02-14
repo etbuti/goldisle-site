@@ -11,7 +11,7 @@
     "portal": "https://goldisle.org/data/portal.json"
   },
   "proof": {
-    "type": "Ed25519Signature2020",
+    "type": "ssh-ed25519",
     "created": "2026-02-14T00:00:00Z",
     "verificationMethod": "did:web:evanbei.com#key-azPbi1lh",
     "proofPurpose": "assertionMethod",
