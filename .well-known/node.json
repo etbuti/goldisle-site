@@ -1,10 +1,10 @@
 {
   "authority": {
-  "controller_did": "did:web:evanbei.com",
-  "controller_identity": "https://evanbei.com/.well-known/identity.sig.json",
-  "node_identity": "https://goldisle.org/.well-known/identity.sig.json",
-  "control_proof": "ssh-ed25519"
-  }  
+    "controller_did": "did:web:evanbei.com",
+    "controller_identity": "https://evanbei.com/.well-known/identity.sig.json",
+    "node_identity": "https://goldisle.org/.well-known/identity.sig.json",
+    "control_proof": "ssh-ed25519"
+  },
   "node": "goldisle-portal",
   "role": "portal",
   "root_key": "GOLDISLE-PORTAL-A01",
