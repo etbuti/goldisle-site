@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1"
+  ],
+  "id": "did:web:goldisle.org",
+  "controller": "did:web:evanbei.com",
+  "alsoKnownAs": [
+    "https://goldisle.org/"
+  ],
+  "service": [
+    {
+      "id": "#portal",
+      "type": "PortalNode",
+      "serviceEndpoint": "https://goldisle.org/data/portal.json"
+    },
+    {
+      "id": "#node",
+      "type": "OriginNodeDescriptor",
+      "serviceEndpoint": "https://goldisle.org/.well-known/node.json"
+    }
+  ]
+}
