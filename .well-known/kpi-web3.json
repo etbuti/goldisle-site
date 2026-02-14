@@ -15,6 +15,6 @@
     "created": "2026-02-14T00:00:00Z",
     "verificationMethod": "did:web:evanbei.com#key-azPbi1lh",
     "proofPurpose": "assertionMethod",
-    "proofValue": "TBD"
+    "proofValue": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgPiPon62AuPgkOHRozgR18oo1oM\nG/TBkoOswnSOhJQecAAAAQZXZhbmJlaV9pZGVudGl0eQAAAAAAAAAGc2hhNTEyAAAAUwAA\nAAtzc2gtZWQyNTUxOQAAAEDN7zeBNJU6oYLFfJXs8QcuR2ntXcuqHRONsQfguSwczpOldS\nmGyeQeWRM6shcU4HfuZ26R6G0wtkYIVOErMBgM\n-----END SSH SIGNATURE-----"
   }
 }
