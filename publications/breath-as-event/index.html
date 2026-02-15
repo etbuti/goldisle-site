@@ -123,34 +123,72 @@ function gateDownload(e){
   </a>
 
   <!-- Full PDF -->
-<!-- Read Online (password-gated, open in new tab) -->
-<a class="btn"
-   href="#"
-   onclick="return gateRead(event)"
-   data-file="/publications/breath-as-event/breath_as_event__v1.0.pdf">
-   Read Online
-</a>
+<!-- ========================= -->
+<!-- Goldisle Publishing · Secure Access v1.0 -->
+<!-- ========================= -->
+
+<div class="download-area">
+
+  <!-- Read Online -->
+  <a class="btn"
+     href="#"
+     onclick="return gateRead(event)"
+     data-file="/publications/breath-as-event/breath_as_event__v1.0.pdf">
+     Read Online
+  </a>
+
+  <!-- Download -->
+  <a class="btn"
+     href="#"
+     onclick="return gateDownload(event)"
+     data-file="/publications/breath-as-event/breath_as_event__v1.0.pdf"
+     data-name="breath-as-event__goldisle-publishing__isbn-9781918147001__v1.0.pdf">
+     Download PDF
+  </a>
+
+</div>
 
 <script>
+function checkPass(){
+  const pass = prompt("Enter Access Code:");
+  if(pass !== "123"){
+    alert("Access denied");
+    return false;
+  }
+  return true;
+}
+
 function gateRead(e){
   e.preventDefault();
-  const pass = prompt("Password:");
-  if(pass !== "123"){ alert("Wrong password"); return false; }
+  if(!checkPass()) return false;
+  const url = e.currentTarget.dataset.file;
+  window.open(url, "_blank", "noopener");
+  return false;
+}
+
+function gateDownload(e){
+  e.preventDefault();
+  if(!checkPass()) return false;
+
   const a = e.currentTarget;
-  window.open(a.dataset.file, "_blank", "noopener");
+  const url = a.dataset.file;
+  const name = a.dataset.name;
+
+  fetch(url)
+    .then(r => r.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
+
   return false;
 }
 </script>
      
-<!-- Download (library-friendly naming) -->
-<a class="btn"
-   href="#"
-   onclick="return gateDownload(event)"
-   data-file="/publications/breath-as-event/breath_as_event__v1.0.pdf"
-   data-name="breath_as_event__goldisle-publishing__isbn-9781918147001__v1.0.pdf">
-   Download PDF
-</a>
-
   <!-- Bibliography -->
   <a class="btn"
      href="/publications/breath-as-event/bibliography/">
