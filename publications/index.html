@@ -3,58 +3,154 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Publications — Goldisle Publishing</title>
-  <meta name="description" content="Publications catalogue of Goldisle Publishing." />
-  <link rel="canonical" href="https://goldisle.org/publications/" />
 
+  <title>Breath as Event — Goldisle Publishing</title>
+  <meta name="description" content="Breath as Event — Sound as Event series (No. 1). Digital Original scholarly booklet published by Goldisle Publishing." />
+
+  <link rel="canonical" href="https://goldisle.org/publications/breath-as-event/" />
+  <link rel="publisher" href="https://goldisle.org/publishing/" />
+  <link rel="author" href="https://evanbei.com/evanbei/" />
+  <link rel="series" href="https://goldisle.org/series/sound-as-event/" />
+  <link rel="alternate" href="https://goldisle.org/publications/breath-as-event/bibliography/" title="Bibliographic record" />
+  <link rel="alternate" href="https://goldisle.org/publications/breath-as-event/preview/" title="Preview (first pages)" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Breath as Event" />
+  <meta property="og:description" content="Sound as Event series (No. 1) — Digital Original scholarly booklet. Goldisle Publishing, London." />
+  <meta property="og:url" content="https://goldisle.org/publications/breath-as-event/" />
+
+  <!-- v7 JSON-LD (Book) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
-    "@graph":[
+    "@type":"Book",
+    "name":"Breath as Event",
+    "isbn":"978-1-918147-00-1",
+    "datePublished":"2026-02-14",
+    "inLanguage":"en",
+    "bookEdition":"Digital Original Edition (v1.0)",
+    "isPartOf":{"@type":"CreativeWorkSeries","name":"Sound as Event"},
+    "publisher":{"@type":"Organization","name":"Goldisle Publishing","url":"https://goldisle.org/publishing/"},
+    "author":{"@type":"Person","name":"Xiaojun Yin","alternateName":"Evan Bei","url":"https://evanbei.com/evanbei/"},
+    "url":"https://goldisle.org/publications/breath-as-event/",
+    "workExample":[
       {
-        "@type":"Organization",
-        "@id":"https://goldisle.org/publishing/#publisher",
-        "name":"Goldisle Publishing",
-        "url":"https://goldisle.org/publishing/",
-        "location":{"@type":"Place","name":"London, UK"}
-      },
-      {
-        "@type":"CollectionPage",
-        "@id":"https://goldisle.org/publications/#catalogue",
-        "url":"https://goldisle.org/publications/",
-        "name":"Publications — Goldisle Publishing",
-        "isPartOf":{"@id":"https://goldisle.org/#website"},
-        "about":{"@id":"https://goldisle.org/publishing/#publisher"}
+        "@type":"MediaObject",
+        "encodingFormat":"text/html",
+        "contentUrl":"https://goldisle.org/publications/breath-as-event/preview/"
       }
     ]
   }
   </script>
 
   <style>
-    :root{--w:860px;--lh:1.65;}
-    body{margin:0;font-family:"Times New Roman",Times,serif;line-height:var(--lh);}
-    main{max-width:var(--w);margin:48px auto;padding:0 18px;}
-    h1{font-size:28px;margin:0 0 8px;}
-    h2{font-size:18px;margin:26px 0 10px;}
-    p,li{font-size:16px;}
-    .meta{font-size:14px;}
-    .hr{border-top:1px solid #000;margin:18px 0 22px;}
-    a{color:#000;text-decoration:underline;}
+    :root{
+      --w: 860px;
+      --lh: 1.65;
+      --ink: #000;
+      --muted: rgba(0,0,0,.62);
+      --hair: rgba(0,0,0,.14);
+      --hair2: rgba(0,0,0,.08);
+    }
+    body{
+      margin:0;
+      font-family:"Times New Roman", Times, serif;
+      line-height: var(--lh);
+      color: var(--ink);
+      background:#fff;
+    }
+    main{ max-width: var(--w); margin: 48px auto; padding: 0 18px; }
+    a{ color: var(--ink); text-decoration: underline; }
+    h1{ font-size: 30px; font-weight: normal; margin:0 0 6px; }
+    h2{ font-size: 18px; font-weight: normal; margin: 26px 0 10px; }
+    p, li{ font-size: 16px; }
+    .meta{ font-size: 14px; color: var(--muted); }
+    .hr{ border-top: 1px solid var(--ink); margin: 18px 0 22px; }
+    .hairline{ border-top: 1px solid var(--hair); margin: 16px 0 14px; }
+    .kvs{ display:grid; grid-template-columns: 1fr; gap: 8px; }
+    .kv{ display:flex; gap:10px; align-items:baseline; }
+    .k{ min-width: 160px; color: var(--muted); font-size: 14px; }
+    .v{ font-size: 14px; }
+    .pill{ display:inline-block; border:1px solid var(--hair); padding: 2px 8px; font-size: 12px; color: var(--muted); }
+    .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 10px; }
+    .btn{
+      display:inline-block;
+      padding: 10px 14px;
+      border: 1px solid var(--hair);
+      text-decoration: none;
+      font-size: 14px;
+      background:#fff;
+    }
+    .btn:hover{ border-color: rgba(0,0,0,.28); }
+    ul{ margin: 10px 0 0 18px; }
+    li{ margin: 6px 0; }
+    @media (max-width: 520px){
+      .k{ min-width: 110px; }
+      .btn{ width: 100%; text-align:center; }
+    }
   </style>
 </head>
+
 <body>
-  <main>
-    <h1>Publications</h1>
-    <p class="meta">Goldisle Publishing · Catalogue</p>
-    <div class="hr"></div>
+<main>
+  <div class="meta">
+    <a href="/publishing/">Goldisle Publishing</a>
+    <span style="opacity:.55;"> · </span>
+    <a href="/series/sound-as-event/">Sound as Event</a>
+    <span style="opacity:.55;"> · Booklet No. 1</span>
+  </div>
 
-    <h2>Sound as Event Booklets</h2>
-    <ul>
-      <li><a href="/publications/breath-as-event/">No.1 — Breath as Event (PDF)</a></li>
-    </ul>
+  <h1>Breath as Event</h1>
+  <div class="meta">Digital Original scholarly booklet · London, United Kingdom</div>
 
-    <div class="hr"></div>
-    <p class="meta"><a href="/publishing/">Goldisle Publishing</a> · <a href="/series/sound-as-event-booklets/">Series</a></p>
-  </main>
+  <div class="hr"></div>
+
+  <div class="kvs" aria-label="Bibliographic facts">
+    <div class="kv"><div class="k">Author</div><div class="v">Xiaojun Yin <span class="meta">(Evan Bei)</span></div></div>
+    <div class="kv"><div class="k">Publisher</div><div class="v">Goldisle Publishing</div></div>
+    <div class="kv"><div class="k">Series</div><div class="v">Sound as Event · No. 1</div></div>
+    <div class="kv"><div class="k">Edition</div><div class="v">Digital Original Edition (v1.0)</div></div>
+    <div class="kv"><div class="k">Publication date</div><div class="v">14 Feb 2026</div></div>
+    <div class="kv"><div class="k">ISBN</div><div class="v">978-1-918147-00-1</div></div>
+    <div class="kv"><div class="k">Extent</div><div class="v">20 pages</div></div>
+    <div class="kv"><div class="k">Rights</div><div class="v"><span class="pill">Worldwide exclusive</span></div></div>
+  </div>
+
+  <div class="actions" aria-label="Primary actions">
+    <a class="btn" href="/publications/breath-as-event/preview/">Read preview (first pages)</a>
+    <a class="btn" href="/publications/breath-as-event/bibliography/">Bibliographic record & citation</a>
+    <a class="btn" href="/series/sound-as-event/">Series spine</a>
+    <a class="btn" href="mailto:toptrust@gmail.com?subject=Breath%20as%20Event%20%E2%80%94%20Goldisle%20Publishing%20Inquiry">Contact</a>
+  </div>
+
+  <div class="hairline"></div>
+
+  <h2>Abstract</h2>
+  <p>
+    <!-- Replace this paragraph with your final abstract -->
+    <em>Breath as Event</em> explores sound as a temporal and embodied occurrence rather than a fixed object.
+    The booklet examines initiation, breath, and decision structures within contemporary sound practice,
+    combining conceptual research with artistic and sociological perspectives.
+  </p>
+
+  <h2>Contents</h2>
+  <ul>
+    <!-- Replace with your final table of contents -->
+    <li>Prelude: Why “breath” becomes a threshold</li>
+    <li>Terms & orientations (brief glossary)</li>
+    <li>Breath as initiation: conditions under which sound may occur</li>
+    <li>Field notes: practice conditions outside the institution</li>
+    <li>Implications for the series (toward Pulse and Voice)</li>
+    <li>Appendix: selected bibliography (ISBN-based)</li>
+  </ul>
+
+  <h2>Access</h2>
+  <p class="meta">
+    Preview is openly available. Full text release policy and distribution options will be announced on this page.
+  </p>
+
+  <div class="hr"></div>
+  <p class="meta">© 2026 Xiaojun Yin (Evan Bei). Published by Goldisle Publishing. All rights reserved.</p>
+</main>
 </body>
 </html>
