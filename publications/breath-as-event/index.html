@@ -77,6 +77,30 @@
     .btn{display:inline-block;margin:10px 0;padding:0;border:0;}
   </style>
 </head>
+
+<script>
+function gateDownload(e){
+  e.preventDefault();
+
+  var code = prompt("Enter access code:");
+  if(code==="123"){
+     var btn = e.currentTarget;
+     var file = btn.getAttribute("data-file");
+     var name = btn.getAttribute("data-name");
+
+     var a = document.createElement("a");
+     a.href = file;
+     a.download = name;
+     document.body.appendChild(a);
+     a.click();
+     document.body.removeChild(a);
+  }else{
+     alert("Invalid code");
+  }
+  return false;
+}
+</script>  
+  
 <body>
   <main>
     <h1>Breath as Event</h1>
@@ -107,12 +131,14 @@
      Open full booklet (PDF)
   </a>
 
-  <!-- Download (library-friendly naming) -->
-  <a class="btn"
-     href="/publications/breath-as-event/breath-as-event__v1.0.pdf"
-     download="breath-as-event__goldisle-publishing__isbn-9781918147001__v1.0.pdf">
-     Download PDF
-  </a>
+<!-- Download (library-friendly naming) -->
+<a class="btn"
+   href="#"
+   onclick="return gateDownload(event)"
+   data-file="/publications/breath-as-event/breath-as-event__v1.0.pdf"
+   data-name="breath-as-event__goldisle-publishing__isbn-9781918147001__v1.0.pdf">
+   Download PDF
+</a>
 
   <!-- Bibliography -->
   <a class="btn"
