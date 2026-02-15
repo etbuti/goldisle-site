@@ -123,14 +123,25 @@ function gateDownload(e){
   </a>
 
   <!-- Full PDF -->
-  <a class="btn"
-     href="/publications/breath-as-event/breath-as-event__v1.0.pdf"
-     type="application/pdf"
-     target="_blank"
-     rel="noopener">
-     Open full booklet (PDF)
-  </a>
+<!-- Read Online (password-gated, open in new tab) -->
+<a class="btn"
+   href="#"
+   onclick="return gateRead(event)"
+   data-file="/publications/breath-as-event/breath_as_event__v1.0.pdf">
+   Read Online
+</a>
 
+<script>
+function gateRead(e){
+  e.preventDefault();
+  const pass = prompt("Password:");
+  if(pass !== "123"){ alert("Wrong password"); return false; }
+  const a = e.currentTarget;
+  window.open(a.dataset.file, "_blank", "noopener");
+  return false;
+}
+</script>
+     
 <!-- Download (library-friendly naming) -->
 <a class="btn"
    href="#"
