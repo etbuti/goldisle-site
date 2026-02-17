@@ -1,179 +1,159 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scriptorium · Console</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- keep private -->
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
-  <meta name="referrer" content="same-origin" />
+<title>Scriptorium · Console</title>
 
-  <!-- reuse scriptorium style -->
-  <link rel="stylesheet" href="/scriptorium/assets/rr.css" />
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+<meta name="referrer" content="same-origin" />
+
+<link rel="stylesheet" href="/scriptorium/assets/rr.css" />
 </head>
 
 <body>
-  <!-- Light guard: prefer entering from room.html -->
-  <script>
-  (function () {
-    // If you open directly (no referrer), bounce back to room.
-    // This is not cryptographic security—just a clean internal routing rule.
-    const ref = document.referrer || "";
-    const ok = ref.includes("/scriptorium/") && ref.includes("goldisle.org");
-    if (!ok) location.replace("/scriptorium/room.html");
-  })();
-  </script>
 
-  <header class="top">
-    <div>
-      <div class="kicker">SCRIPTORIUM</div>
-      <div class="toprow">
-        <h1 class="h">Console</h1>
-        <div class="count">·</div>
-        <div class="status">internal</div>
-      </div>
-      <div class="sub">Internal project links · operating dashboard</div>
+<header class="top">
+  <div>
+    <div class="kicker">SCRIPTORIUM</div>
+    <div class="toprow">
+      <h1 class="h">Console</h1>
+      <div class="count" id="console-count">·</div>
+      <div class="status">internal</div>
     </div>
-  </header>
+    <div class="sub">Archive internal tools · curator workspace</div>
+  </div>
+</header>
 
-  <main class="wrap wide">
-    <section class="panel">
-      <div class="row">
-        <input class="input" id="q" placeholder="Search name / tag / note…" />
-        <select class="select" id="group"></select>
-        <select class="select" id="tag"></select>
+<main class="wrap wide">
+<section class="panel">
+
+  <div class="row">
+    <input class="input" id="q" placeholder="Search name / tag / note…" />
+    <select class="select" id="group"></select>
+    <select class="select" id="tag"></select>
+
+    <a class="input"
+       style="display:inline-block;text-decoration:none"
+       href="/scriptorium/room.html">
+       ← Shelves
+    </a>
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+</section>
+
+<footer class="foot">
+Scriptorium internal console.<br>
+Edit <span class="mono">/scriptorium/console/links.json</span> to manage entries.
+</footer>
+</main>
+
+<script>
+(async function(){
+
+const grid = document.getElementById("grid");
+const qEl  = document.getElementById("q");
+const gEl  = document.getElementById("group");
+const tEl  = document.getElementById("tag");
+const countEl = document.getElementById("console-count");
+
+let data = {items:[]};
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function norm(s){return (s||"").toLowerCase().trim();}
+function uniq(a){return Array.from(new Set(a.filter(Boolean))).sort((a,b)=>a.localeCompare(b));}
+
+function render(items){
+
+  countEl.textContent = items.length + " items";
+
+  grid.innerHTML="";
+
+  for(const it of items){
+
+    const card=document.createElement("div");
+    card.className="panel";
+
+    const tags=(it.tags||[]).slice(0,6).map(t=>`<span class="status">${esc(t)}</span>`).join("");
+
+    const links=(it.links||[]).map(a=>`
+      <a class="input"
+         style="display:inline-block;text-decoration:none"
+         href="${esc(a.href||"#")}"
+         target="_blank"
+         rel="noreferrer">
+         ${esc(a.label||"Open")} →
+      </a>
+    `).join("");
+
+    card.innerHTML=`
+      <div class="kicker">${esc(it.group||"PROJECT")}</div>
+      <div class="toprow">
+        <div class="h" style="font-size:18px">${esc(it.name||"Untitled")}</div>
+        ${it.pinned?`<div class="status">PIN</div>`:""}
       </div>
+      <div class="sub" style="margin-top:6px">${esc(it.desc||"")}</div>
+      <div class="row" style="margin-top:8px">${tags}</div>
+      <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">${links}</div>
+    `;
 
-      <div id="grid" class="grid"></div>
+    grid.appendChild(card);
+  }
+}
 
-      <div class="board" id="note" style="display:none"></div>
-    </section>
+function apply(){
 
-    <footer class="foot">
-      This console lives inside Scriptorium (archive zone).<br>
-      Edit <span class="mono">/scriptorium/console/links.json</span> to manage entries.
-    </footer>
-  </main>
+  let items=data.items||[];
 
-  <script>
-  (async function(){
-    const grid  = document.getElementById("grid");
-    const qEl   = document.getElementById("q");
-    const gEl   = document.getElementById("group");
-    const tEl   = document.getElementById("tag");
-    const note  = document.getElementById("note");
+  const q=norm(qEl.value);
+  const g=gEl.value;
+  const t=tEl.value;
 
-    let data = { updated:"", items:[] };
+  if(g) items=items.filter(x=>x.group===g);
+  if(t) items=items.filter(x=>(x.tags||[]).includes(t));
 
-    function esc(s){
-      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-    function norm(s){ return (s||"").toLowerCase().trim(); }
-    function uniq(a){
-      return Array.from(new Set(a.filter(Boolean))).sort((x,y)=>x.localeCompare(y));
-    }
-    function safeHref(u){
-      const v = String(u||"").trim();
-      if (!v) return "#";
-      if (/^javascript:/i.test(v)) return "#";
-      return v;
-    }
+  if(q){
+    items=items.filter(x=>{
+      const hay=[x.name,x.desc,x.group,...(x.tags||[])].join(" ");
+      return norm(hay).includes(q);
+    });
+  }
 
-    function render(items){
-      grid.innerHTML = "";
-      if(!items.length){
-        grid.innerHTML = `<div class="panel"><div class="sub">No matches.</div></div>`;
-        return;
-      }
-      for(const it of items){
-        const links = Array.isArray(it.links) ? it.links : [];
-        const tags  = Array.isArray(it.tags) ? it.tags : [];
-        const group = it.group || "";
+  items=[...items].sort((a,b)=>{
+    if(!!a.pinned!==!!b.pinned) return a.pinned?-1:1;
+    return String(a.name||"").localeCompare(String(b.name||""));
+  });
 
-        const card = document.createElement("div");
-        card.className = "panel";
-        card.innerHTML = `
-          <div class="kicker">${esc(group || "PROJECT")}</div>
-          <div class="toprow" style="gap:10px">
-            <div class="h" style="font-size:18px;line-height:1.2;margin:0">${esc(it.name || "Untitled")}</div>
-            ${it.pinned ? `<div class="status">PIN</div>` : ``}
-          </div>
-          <div class="sub" style="margin-top:8px">${esc(it.desc || "")}</div>
-          <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
-            ${tags.slice(0,6).map(x => `<span class="status">${esc(x)}</span>`).join("")}
-          </div>
-          <div class="row" style="margin-top:12px;flex-wrap:wrap;gap:8px">
-            ${links.map(a => `
-              <a class="input"
-                 style="display:inline-block;text-decoration:none;cursor:pointer"
-                 href="${esc(safeHref(a.href))}"
-                 target="_blank"
-                 rel="noreferrer">
-                ${esc(a.label || "Open")} →
-              </a>
-            `).join("")}
-          </div>
-        `;
-        grid.appendChild(card);
-      }
-    }
+  render(items);
+}
 
-    function apply(){
-      const q = norm(qEl.value);
-      const g = gEl.value;
-      const t = tEl.value;
+try{
+  const res=await fetch("./links.json",{cache:"no-store"});
+  data=await res.json();
+}catch(e){
+  grid.innerHTML='<div class="sub">Cannot load links.json</div>';
+  return;
+}
 
-      let items = data.items || [];
+gEl.innerHTML='<option value="">All groups</option>'+uniq((data.items||[]).map(x=>x.group))
+  .map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
 
-      if(g) items = items.filter(x => (x.group||"") === g);
-      if(t) items = items.filter(x => (Array.isArray(x.tags)?x.tags:[]).includes(t));
+tEl.innerHTML='<option value="">All tags</option>'+uniq((data.items||[]).flatMap(x=>x.tags||[]))
+  .map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
 
-      if(q){
-        items = items.filter(x => {
-          const hay = [
-            x.name, x.desc, x.group,
-            ...(Array.isArray(x.tags)?x.tags:[]),
-            ...(Array.isArray(x.links)?x.links.map(l => (l.label||"")+" "+(l.href||"")):[])
-          ].join(" ");
-          return norm(hay).includes(q);
-        });
-      }
+qEl.addEventListener("input",apply);
+gEl.addEventListener("change",apply);
+tEl.addEventListener("change",apply);
 
-      // pinned first, then alpha
-      items = [...items].sort((a,b)=>{
-        const ap=!!a.pinned, bp=!!b.pinned;
-        if(ap!==bp) return ap?-1:1;
-        return String(a.name||"").localeCompare(String(b.name||""));
-      });
+apply();
 
-      render(items);
-    }
+})();
+</script>
 
-    try{
-      const res = await fetch("./links.json", {cache:"no-store"});
-      if(!res.ok) throw new Error("links.json load failed: " + res.status);
-      data = await res.json();
-    }catch(e){
-      note.style.display = "block";
-      note.innerHTML = `<div class="sub">Cannot load links.json: ${esc(String(e))}</div>`;
-      return;
-    }
-
-    // filters
-    gEl.innerHTML = `<option value="">All groups</option>` + uniq((data.items||[]).map(x=>x.group))
-      .map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
-
-    const tags = uniq((data.items||[]).flatMap(x => Array.isArray(x.tags)?x.tags:[]));
-    tEl.innerHTML = `<option value="">All tags</option>` + tags
-      .map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
-
-    qEl.addEventListener("input", apply);
-    gEl.addEventListener("change", apply);
-    tEl.addEventListener("change", apply);
-
-    apply();
-  })();
-  </script>
 </body>
 </html>
