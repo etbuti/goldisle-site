@@ -1,1 +1,18 @@
+name = "goldisle-scriptorium-metrics"
+main = "src/worker.js"
+compatibility_date = "2026-02-17"
+
+# 绑定 Analytics Engine dataset
+analytics_engine_datasets = [
+  { binding = "AE", dataset = "scriptorium_hits" }
+]
+
+# 路由：只接这两个端点
+routes = [
+  { pattern = "goldisle.org/scriptorium/_hit", zone_name = "goldisle.org" },
+  { pattern = "goldisle.org/scriptorium/_stats", zone_name = "goldisle.org" }
+]
+
+[vars]
+CF_ACCOUNT_ID = "YOUR_ACCOUNT_ID"
 
