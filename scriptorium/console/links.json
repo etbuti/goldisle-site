@@ -1,0 +1,40 @@
+{
+  "updated": "2026-02-17",
+  "items": [
+    {
+      "name": "evanbei.com · Origin Node",
+      "pinned": true,
+      "group": "Identity",
+      "tags": ["node.json", "agent", "root"],
+      "desc": "Primary public identity node and machine-readable endpoints.",
+      "links": [
+        {"label": "Home", "href": "https://evanbei.com/"},
+        {"label": "node.json", "href": "https://evanbei.com/.well-known/node.json"},
+        {"label": "agent-card", "href": "https://evanbei.com/.well-known/agent-card.json"},
+        {"label": "RPC", "href": "https://rpc.evanbei.com/agent/rpc"}
+      ]
+    },
+    {
+      "name": "goldisle.org · Publishing",
+      "pinned": true,
+      "group": "Publishing",
+      "tags": ["isbn", "publications", "scriptorium"],
+      "desc": "Publishing index, archives, and controlled reading room.",
+      "links": [
+        {"label": "Site", "href": "https://goldisle.org/"},
+        {"label": "Publishing", "href": "https://goldisle.org/publishing/"},
+        {"label": "Scriptorium", "href": "https://goldisle.org/scriptorium/"}
+      ]
+    },
+    {
+      "name": "sa_economy · Agent RPC & Audit",
+      "group": "Engineering",
+      "tags": ["go", "audit", "rpc"],
+      "desc": "Audit + quorum / frozen ops pipeline.",
+      "links": [
+        {"label": "Status (agent)", "href": "https://evanbei.com/agent/status/"},
+        {"label": "Repo", "href": "https://github.com/REPLACE_ME/sa_economy"}
+      ]
+    }
+  ]
+}
