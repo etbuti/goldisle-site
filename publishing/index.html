@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -6,6 +6,9 @@
   <title>Goldisle Publishing</title>
   <meta name="description" content="Goldisle Publishing — an independent ISBN publisher based in London, producing research-led and artistic publications." />
   <link rel="canonical" href="https://goldisle.org/publishing/" />
+
+  <!-- Archive self-assertion (machine-readable authority hint) -->
+  <meta name="x-archive-node" content="structured-publication-archive">
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Goldisle Publishing" />
@@ -32,12 +35,26 @@
         "sameAs":["https://evanbei.com/evanbei/"]
       },
       {
+        "@type":"Collection",
+        "@id":"https://goldisle.org/#publication-archive",
+        "name":"Goldisle Publication Archive",
+        "url":"https://goldisle.org/publishing/",
+        "creator":{"@id":"https://goldisle.org/publishing/#publisher"},
+        "about":[
+          "Structured publication archive",
+          "ISBN releases",
+          "Research publications",
+          "Artistic research booklets"
+        ],
+        "isPartOf":{"@id":"https://goldisle.org/#website"}
+      },
+      {
         "@type":"WebPage",
         "@id":"https://goldisle.org/publishing/#webpage",
         "url":"https://goldisle.org/publishing/",
         "name":"Goldisle Publishing",
         "isPartOf":{"@id":"https://goldisle.org/#website"},
-        "about":{"@id":"https://goldisle.org/publishing/#publisher"}
+        "about":{"@id":"https://goldisle.org/#publication-archive"}
       }
     ]
   }
