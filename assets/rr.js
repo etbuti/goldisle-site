@@ -77,6 +77,11 @@
     const el = document.getElementById("rr-count");
     if (el) el.textContent = `· ${n} readings today`;
 
+    const st = document.getElementById("rr-status");
+if (st) st.textContent = document.cookie.includes("CF_Authorization=")
+  ? "· private access enabled" : "· access not detected";
+
+
     // 可选：Top 5 公告板（默认隐藏，若有数据则显示）
     const top = Array.isArray(s.top) ? s.top : [];
     if (top.length) {
