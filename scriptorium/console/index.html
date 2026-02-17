@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Console · Evan Bei</title>
+
+  <!-- 不公开索引（同时靠 Cloudflare Access 门禁） -->
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <style>
+    :root{--bg:#0b0c10;--card:#11131a;--text:#e9eefc;--muted:#a9b3cf;--line:#222738;--btn:#1a2033;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"PingFang SC","Noto Sans CJK SC",sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:28px 18px 12px;max-width:1120px;margin:0 auto}
+    h1{margin:0;font-size:20px;letter-spacing:.3px}
+    .sub{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.5}
+    .bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    input,select{background:var(--card);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
+    input{flex:1;min-width:220px}
+    select{min-width:180px}
+    main{max-width:1120px;margin:0 auto;padding:12px 18px 40px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    @media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media (max-width:620px){.grid{grid-template-columns:1fr;}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .title{font-size:14px;margin:0;line-height:1.25}
+    .tag{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:4px 8px;border-radius:999px}
+    .desc{margin:10px 0 12px;color:var(--muted);font-size:12px;line-height:1.55;min-height:38px}
+    .links{display:flex;flex-wrap:wrap;gap:8px}
+    a.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+      background:var(--btn);border:1px solid var(--line);padding:8px 10px;border-radius:12px;font-size:12px}
+    a.btn:hover{border-color:#3a4363}
+    footer{max-width:1120px;margin:0 auto;padding:0 18px 26px;color:var(--muted);font-size:12px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Project Console</h1>
+    <div class="sub">
+      私有入口：仅用于本人项目导航、运维与发布。<br>
+      若需临时授权他人，请在 Cloudflare Access Policy 中添加对方邮箱（建议走申请流程而不是直接开放）。
+    </div>
+
+    <div class="bar">
+      <input id="q" placeholder="搜索：项目名 / 域名 / 标签 …" autocomplete="off" />
+      <select id="group">
+        <option value="">全部分组</option>
+      </select>
+      <select id="tag">
+        <option value="">全部标签</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <footer>
+    配置文件：<span class="mono">/console/links.json</span>（你只要改这个 JSON，就等于“管理台改内容”）。
+    <br>
+    申请通道建议：<span class="mono">contact@evanbei.com</span>（Subject: Console Access Request）
+  </footer>
+
+<script>
+(async function(){
+  const grid = document.getElementById("grid");
+  const qEl = document.getElementById("q");
+  const groupEl = document.getElementById("group");
+  const tagEl = document.getElementById("tag");
+
+  let data = { updated:"", items:[] };
+
+  function norm(s){ return (s||"").toLowerCase().trim(); }
+
+  function uniq(arr){
+    return Array.from(new Set(arr.filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+  }
+
+  function render(items){
+    grid.innerHTML = "";
+    if(!items.length){
+      grid.innerHTML = `<div class="card"><p class="desc">没有匹配项。</p></div>`;
+      return;
+    }
+    for(const it of items){
+      const title = it.name || "(untitled)";
+      const desc  = it.desc || "";
+      const group = it.group || "";
+      const tags  = Array.isArray(it.tags) ? it.tags : [];
+      const links = Array.isArray(it.links) ? it.links : [];
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="top">
+          <div>
+            <p class="title">${escapeHtml(title)}</p>
+            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+              ${group ? `<span class="tag">${escapeHtml(group)}</span>` : ""}
+              ${tags.slice(0,3).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}
+            </div>
+          </div>
+        </div>
+        <p class="desc">${escapeHtml(desc)}</p>
+        <div class="links">
+          ${links.map(a=>{
+            const label = a.label || "Open";
+            const href  = a.href  || "#";
+            return `<a class="btn" href="${escapeAttr(href)}" target="_blank" rel="noreferrer">${escapeHtml(label)} →</a>`;
+          }).join("")}
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){
+    // 简单防注入：禁止 javascript: 等
+    const v = String(s || "").trim();
+    if(/^javascript:/i.test(v)) return "#";
+    return escapeHtml(v);
+  }
+
+  function apply(){
+    const q = norm(qEl.value);
+    const g = groupEl.value;
+    const t = tagEl.value;
+
+    let items = data.items || [];
+    if(g) items = items.filter(x => (x.group||"") === g);
+    if(t) items = items.filter(x => (Array.isArray(x.tags)?x.tags:[]).includes(t));
+
+    if(q){
+      items = items.filter(x=>{
+        const hay = [
+          x.name, x.desc, x.group,
+          ...(Array.isArray(x.tags)?x.tags:[]),
+          ...(Array.isArray(x.links)?x.links.map(l=>l.href+" "+l.label):[])
+        ].join(" ");
+        return norm(hay).includes(q);
+      });
+    }
+    render(items);
+  }
+
+  // load JSON
+  try{
+    const res = await fetch("./links.json", {cache:"no-store"});
+    if(!res.ok) throw new Error("links.json load failed: " + res.status);
+    data = await res.json();
+  }catch(e){
+    grid.innerHTML = `<div class="card"><p class="desc">无法加载 links.json：${String(e)}</p></div>`;
+    return;
+  }
+
+  // init filters
+  const groups = uniq((data.items||[]).map(x=>x.group));
+  groups.forEach(g=>{
+    const op = document.createElement("option");
+    op.value = g; op.textContent = g;
+    groupEl.appendChild(op);
+  });
+
+  const tags = uniq((data.items||[]).flatMap(x=>Array.isArray(x.tags)?x.tags:[]));
+  tags.forEach(t=>{
+    const op = document.createElement("option");
+    op.value = t; op.textContent = t;
+    tagEl.appendChild(op);
+  });
+
+  qEl.addEventListener("input", apply);
+  groupEl.addEventListener("change", apply);
+  tagEl.addEventListener("change", apply);
+
+  apply();
+})();
+</script>
+</body>
+</html>
