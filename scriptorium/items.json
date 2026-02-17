@@ -2,4 +2,12 @@
   "version": "0.1",
   "items": []
 }
+{
+  "id": "item-0001",
+  "title": "Example · Public Domain Volume",
+  "category": "Classics",
+  "tags": ["pdf", "scan"],
+  "note": "Public domain source confirmed.",
+  "file": "a.pdf"
+}
 
