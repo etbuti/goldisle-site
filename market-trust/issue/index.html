@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issue Record | Market Trust Layer</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <main class="issue-wrap">
+    <div class="container narrow">
+      <div class="eyebrow">Market Trust Node</div>
+      <h1>Generate Record / 生成记录</h1>
+      <p class="lead">现场离网可运行；联网后再同步到服务器。</p>
+
+      <div class="issue-grid">
+        <section class="card pad">
+          <h2>Merchant / 商户</h2>
+          <div class="field-grid">
+            <label>
+              <span>Merchant Name / 商户名称</span>
+              <input id="merchantName" value="张三水果 / Zhang San Fruits" />
+            </label>
+            <label>
+              <span>Merchant ID / 商户编号</span>
+              <input id="merchantId" value="merchant-qd-a17" />
+            </label>
+            <label>
+              <span>Key ID / 密钥编号</span>
+              <input id="keyId" value="merchant-qd-a17-k01" />
+            </label>
+            <label>
+              <span>Node ID / 节点编号</span>
+              <input id="nodeId" value="market-node-qd-01" />
+            </label>
+          </div>
+        </section>
+
+        <section class="card pad">
+          <h2>Dispatch / 出货信息</h2>
+          <div class="field-grid">
+            <label>
+              <span>Goods Name / 商品名称</span>
+              <input id="goodsName" placeholder="例如：西瓜 / Watermelon" />
+            </label>
+            <label>
+              <span>Quantity / 数量</span>
+              <input id="goodsQty" placeholder="例如：10" />
+            </label>
+            <label>
+              <span>Dispatch Place / 出货地</span>
+              <input id="dispatchPlace" value="Qingdao Fresh Market, Stall A-17, Qingdao, China" />
+            </label>
+            <label>
+              <span>Note / 备注</span>
+              <input id="note" placeholder="可选" />
+            </label>
+          </div>
+
+          <div class="hero-actions top-gap">
+            <button class="btn btn-dark" id="generateBtn">Generate Record / 生成记录</button>
+            <button class="btn btn-light" id="loadExampleBtn">Load Example / 示例填充</button>
+          </div>
+        </section>
+
+        <section class="card pad">
+          <h2>Result / 结果</h2>
+          <div id="resultMeta" class="result-meta">尚未生成记录。</div>
+          <textarea id="jsonOutput" class="json-output" placeholder="生成后的 JSON 会显示在这里"></textarea>
+          <div class="hero-actions top-gap">
+            <button class="btn btn-light" id="downloadJsonBtn">Download JSON</button>
+            <button class="btn btn-light" id="downloadHtmlBtn">Download HTML</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>
