@@ -58,5 +58,5 @@
       "duplicate": true
     }
   ],
-  "status": "mapped_payload_codec_pending"
+  "status": "protected_payload_codec_pending"
 }
