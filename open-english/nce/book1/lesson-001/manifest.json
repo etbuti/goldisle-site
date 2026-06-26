@@ -1,56 +1,62 @@
 {
-  "project": "Open English Learning Archive",
   "lesson": "book1/lesson-001",
   "targets": [
     {
       "offset": 4244,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/image001.jpg",
       "relative_path": "第一册/1/1-5.files/image001.jpg",
-      "kind": "image"
+      "kind": "image",
+      "lesson": "lesson-005",
+      "duplicate": false
     },
     {
       "offset": 4290,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/image002.jpg",
       "relative_path": "第一册/1/1-5.files/image002.jpg",
-      "kind": "image"
+      "kind": "image",
+      "lesson": "lesson-005",
+      "duplicate": false
     },
     {
       "offset": 4336,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/filelist.xml",
       "relative_path": "第一册/1/1-5.files/filelist.xml",
-      "kind": "xml"
+      "kind": "xml",
+      "lesson": "lesson-005",
+      "duplicate": false
     },
     {
       "offset": 2859695,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.htm",
       "relative_path": "第一册/1/1-5.htm",
-      "kind": "html"
+      "kind": "html",
+      "lesson": "lesson-005",
+      "duplicate": false
     },
     {
       "offset": 2863066,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/image001.jpg",
       "relative_path": "第一册/1/1-5.files/image001.jpg",
-      "kind": "image"
+      "kind": "image",
+      "lesson": "lesson-005",
+      "duplicate": true
     },
     {
       "offset": 2863112,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/image002.jpg",
       "relative_path": "第一册/1/1-5.files/image002.jpg",
-      "kind": "image"
+      "kind": "image",
+      "lesson": "lesson-005",
+      "duplicate": true
     },
     {
       "offset": 2863158,
-      "raw_hex": "673a2f6e636570726f6a6563742fb5da",
       "path": "g:/nceproject/第一册/1/1-5.files/filelist.xml",
       "relative_path": "第一册/1/1-5.files/filelist.xml",
-      "kind": "xml"
+      "kind": "xml",
+      "lesson": "lesson-005",
+      "duplicate": true
     }
   ],
-  "status": "mapped_paths_payload_decoder_pending"
+  "status": "mapped_payload_codec_pending"
 }
