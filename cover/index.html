@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Goldisle Cover Studio — Artwork Preparation</title>
+<meta name="description" content="A free, private, browser-based square artwork crop and export tool.">
+<style>
+:root{
+  --paper:#f7f4ee;
+  --ink:#252521;
+  --muted:#77746d;
+  --red:#ad4639;
+  --line:#ded9cf;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+header{
+  max-width:1100px;margin:auto;padding:30px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--line);
+}
+.brand{font-size:13px;font-weight:750;letter-spacing:2.5px}
+.lang{
+  background:none;border:1px solid var(--line);border-radius:20px;
+  padding:9px 15px;cursor:pointer;color:var(--ink);
+}
+main{max-width:1050px;margin:65px auto;padding:0 24px}
+.eyebrow{color:var(--red);font-size:11px;letter-spacing:3px;font-weight:700}
+h1{
+  font-family:Georgia,serif;font-size:clamp(40px,7vw,76px);
+  font-weight:400;letter-spacing:-2px;margin:15px 0;
+}
+.subtitle{color:var(--muted);font-size:16px;line-height:1.8}
+.workspace{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);
+  gap:50px;margin-top:55px;
+}
+.stage{
+  background:#e9e4db;border:1px solid var(--line);
+  padding:20px;min-width:0;
+}
+canvas{
+  display:block;width:100%;aspect-ratio:1;
+  background:#ddd6ca;touch-action:none;cursor:grab;
+}
+canvas:active{cursor:grabbing}
+.drop{
+  text-align:center;border:1px dashed #b8b1a5;
+  padding:22px 12px;margin-top:16px;
+  cursor:pointer;font-size:13px;color:var(--muted);
+}
+.drop:hover{border-color:var(--red)}
+.panel h2{font-size:12px;letter-spacing:2px;margin:0 0 25px}
+.label{
+  font-size:11px;letter-spacing:1.5px;color:var(--muted);
+  text-transform:uppercase;margin:26px 0 12px;
+}
+input[type=range]{width:100%;accent-color:var(--red)}
+button.action{
+  width:100%;padding:16px;margin:8px 0;
+  border:1px solid var(--ink);background:transparent;
+  color:var(--ink);cursor:pointer;font-size:13px;
+}
+button.primary{background:var(--red);color:white;border-color:var(--red)}
+button.green{background:#39765b;color:white;border-color:#39765b}
+.text-tools{border-top:1px solid var(--line);margin-top:30px;padding-top:28px}
+.text-tools textarea{
+ width:100%;padding:13px;background:transparent;
+ border:1px solid var(--line);color:var(--ink);
+}
+.text-tools input[type=color]{width:60px;height:38px;cursor:pointer}
+.text-tools textarea{min-height:100px;resize:vertical;font:inherit;line-height:1.5}
+.align-buttons,.color-presets{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.align-buttons button{flex:1;padding:11px 5px;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer}
+.align-buttons button.active{background:var(--ink);color:var(--paper)}
+.color-presets button{width:34px;height:34px;border-radius:50%;border:1px solid #999;cursor:pointer}
+.color-presets button.active{outline:2px solid var(--red);outline-offset:3px}
+.value-readout{float:right;color:var(--muted);font-size:12px}
+.text-tools .control{margin:14px 0}
+.text-tools label{font-size:13px}
+.text-tools input[type=checkbox]{accent-color:var(--red)}
+
+button:disabled{opacity:.4;cursor:not-allowed}
+button.action:not(:disabled):hover{filter:brightness(.93)}
+select{
+  width:100%;padding:13px;background:transparent;
+  border:1px solid var(--line);color:var(--ink);
+}
+.note{font-size:12px;line-height:1.8;color:var(--muted)}
+.status{min-height:20px;color:var(--red);font-size:12px}
+footer{
+  max-width:1100px;margin:80px auto 0;padding:25px 24px;
+  border-top:1px solid var(--line);display:flex;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;
+  color:var(--muted);font-size:11px;letter-spacing:1px;
+}
+@media(max-width:720px){
+  main{margin-top:40px}
+  .workspace{grid-template-columns:1fr;gap:30px}
+  .stage{padding:12px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">GOLDISLE LIGHT <span style="color:#ad4639">/</span> STUDIO</div>
+  <button class="lang" id="language">中文 / EN</button>
+</header>
+
+<main>
+  <div class="eyebrow">AN INDEPENDENT CREATIVE TOOL · 001</div>
+  <h1>Cover Studio<span style="color:#ad4639">.</span></h1>
+  <p class="subtitle" data-en="Prepare your artwork for release. Crop, refine and export — privately, in your browser."
+     data-zh="为作品准备正式封面。裁剪、调整、导出——全部在浏览器本地完成。">
+    Prepare your artwork for release. Crop, refine and export — privately, in your browser.
+  </p>
+
+  <section class="workspace">
+    <div>
+      <div class="stage">
+        <canvas id="preview" width="900" height="900" aria-label="Artwork crop preview"></canvas>
+        <div class="drop" id="drop" tabindex="0" role="button"
+          data-en="＋ Drop artwork here or click to select"
+          data-zh="＋ 拖入图片，或点击选择文件">
+          ＋ Drop artwork here or click to select
+        </div>
+      </div>
+      <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
+      <p class="note" data-en="Drag the image to reposition. Use the slider to zoom. The square preview is the final crop."
+        data-zh="拖动图片调整位置，使用滑块缩放。正方形预览即为最终裁剪范围。">
+        Drag the image to reposition. Use the slider to zoom. The square preview is the final crop.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 data-en="01 / ARTWORK SETTINGS" data-zh="01 / 封面设置">01 / ARTWORK SETTINGS</h2>
+      <div class="label" data-en="Scale" data-zh="缩放">Scale</div>
+      <input type="range" id="zoom" min="1" max="3" step=".01" value="1" disabled>
+      <button class="action" id="reset" disabled
+        data-en="Reset crop" data-zh="重置裁剪">Reset crop</button>
+
+      <div class="label" data-en="Output format" data-zh="导出格式">Output format</div>
+      <select id="format">
+        <option value="image/png">PNG — Lossless</option>
+        <option value="image/jpeg">JPG — High Quality</option>
+      </select>
+
+      <div class="label" data-en="Export artwork" data-zh="导出封面">Export artwork</div>
+      <button class="action primary" id="large" disabled>3000 × 3000 px</button>
+      <button class="action green" id="small" disabled>1400 × 1400 px</button>
+
+
+      <div class="text-tools">
+        <h2 data-en="02 / COVER TEXT"
+            data-zh="02 / 封面文字">02 / COVER TEXT</h2>
+
+        <div class="control">
+          <label>
+            <input type="checkbox" id="showText">
+            <span data-en="Enable text" data-zh="启用文字">
+              Enable text
+            </span>
+          </label>
+        </div>
+
+        <div class="label" data-en="Text" data-zh="文字内容">Text</div>
+        <textarea id="coverText" maxlength="500" placeholder="Album title&#10;Artist&#10;Subtitle"></textarea>
+
+        <div class="label" data-en="Font size" data-zh="文字大小">
+          Font size
+        </div>
+        <span class="value-readout" id="fontSizeValue">55</span>
+        <input type="range" id="fontSize" min="15" max="130" value="55">
+        <div class="label" data-en="Line spacing" data-zh="行距">Line spacing</div>
+        <span class="value-readout" id="lineSpacingValue">1.30</span>
+        <input type="range" id="lineSpacing" min="0.9" max="2.5" step="0.05" value="1.3">
+        <div class="label" data-en="Text alignment" data-zh="文字对齐">Text alignment</div>
+        <div class="align-buttons">
+          <button type="button" data-align="left" data-en="Left" data-zh="左对齐">Left</button>
+          <button type="button" data-align="center" class="active" data-en="Center" data-zh="居中">Center</button>
+          <button type="button" data-align="right" data-en="Right" data-zh="右对齐">Right</button>
+        </div>
+
+        <div class="label" data-en="Text color" data-zh="文字颜色">
+          Text color
+        </div>
+        <div class="color-presets" id="colorPresets">
+          <button type="button" data-color="#ffffff" style="background:#ffffff" aria-label="White" title="White"></button>
+          <button type="button" data-color="#171717" style="background:#171717" aria-label="Black" title="Black"></button>
+          <button type="button" data-color="#d9b477" style="background:#d9b477" aria-label="Gold" title="Gold"></button>
+          <button type="button" data-color="#b04438" style="background:#b04438" aria-label="Red" title="Red"></button>
+          <button type="button" data-color="#39765b" style="background:#39765b" aria-label="Green" title="Green"></button>
+          <button type="button" data-color="#a6a6a6" style="background:#a6a6a6" aria-label="Grey" title="Grey"></button>
+        </div>
+        <label for="textColor" data-en="Custom color" data-zh="自定义颜色">Custom color</label>
+        <input type="color" id="textColor" value="#ffffff">
+
+        <p class="note"
+          data-en="Drag the text on the artwork to position it. Text is included in exports."
+          data-zh="直接拖动封面上的文字调整位置，导出图片会包含文字。">
+          Drag the text on the artwork to position it.
+          Text is included in exports.
+        </p>
+      </div>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="note" data-en="Your artwork stays on your device. No account, no upload, no server processing."
+        data-zh="图片始终保留在你的设备上。无需账户、不上传、不经过服务器处理。">
+        Your artwork stays on your device. No account, no upload, no server processing.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© GOLDISLE LIGHT · EVAN BEI STUDIO</span>
+  <span>INDEPENDENT CREATIVE TOOLS · LONDON</span>
+</footer>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const canvas = $("preview");
+const ctx = canvas.getContext("2d");
+let img = null;
+let objectURL = null;
+let language = "en";
+let scale = 1, offsetX = 0, offsetY = 0;
+let dragging = false, lastX = 0, lastY = 0;
+let draggingText = false;
+let textX = 450, textY = 450;
+
+const SIZE = 900;
+
+function message(en, zh) {
+  $("status").textContent = language === "zh" ? zh : en;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, SIZE, SIZE);
+  ctx.fillStyle = "#ddd6ca";
+  ctx.fillRect(0, 0, SIZE, SIZE);
+  if (!img) {
+    ctx.fillStyle = "#8a8176";
+    ctx.textAlign = "center";
+    ctx.font = "16px sans-serif";
+    ctx.fillText(language === "zh" ? "封面预览" : "ARTWORK PREVIEW", SIZE/2, SIZE/2);
+    return;
+  }
+  const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
+  const w = img.naturalWidth * base * scale;
+  const h = img.naturalHeight * base * scale;
+  ctx.drawImage(img, (SIZE-w)/2+offsetX, (SIZE-h)/2+offsetY, w, h);
+  drawText(ctx, 1);
+}
+
+let textAlignMode = "center";
+function textLayout(c, factor) {
+  const lines = $("coverText").value.split(/\r?\n/);
+  const fontSize = Number($("fontSize").value) * factor;
+  const lineHeight = fontSize * Number($("lineSpacing").value);
+  c.font = "bold " + fontSize + "px Georgia, serif";
+  const naturalWidth = Math.max(1,...lines.map(line => c.measureText(line).width));
+  const maxWidth = 850 * factor;
+  const width = Math.min(naturalWidth,maxWidth);
+  const height = fontSize + (lines.length-1)*lineHeight;
+  return {lines,fontSize,lineHeight,maxWidth,width,height};
+}
+function drawText(c, factor) {
+  if (!$("showText").checked || !$("coverText").value.trim()) return;
+  c.save();
+  const layout = textLayout(c,factor);
+  c.fillStyle = $("textColor").value;
+  c.textAlign = textAlignMode;
+  c.textBaseline = "middle";
+  c.shadowColor = "rgba(0,0,0,.35)";
+  c.shadowBlur = 3 * factor;
+  const y0 = textY*factor-(layout.lines.length-1)*layout.lineHeight/2;
+  layout.lines.forEach((line,i) => {
+    c.fillText(line,textX*factor,y0+i*layout.lineHeight,layout.maxWidth);
+  });
+  c.restore();
+}
+function textHit(x,y) {
+  if (!$("showText").checked || !$("coverText").value.trim()) return false;
+  ctx.save();
+  const layout = textLayout(ctx,1);
+  ctx.restore();
+  let left=textX;
+  if (textAlignMode === "center") left-=layout.width/2;
+  if (textAlignMode === "right") left-=layout.width;
+  return x>=left-15 && x<=left+layout.width+15 &&
+         Math.abs(y-textY)<=layout.height/2+15;
+}
+
+function constrain() {
+  if (!img) return;
+  const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
+  const w = img.naturalWidth * base * scale;
+  const h = img.naturalHeight * base * scale;
+  offsetX = Math.max(-(w-SIZE)/2, Math.min((w-SIZE)/2, offsetX));
+  offsetY = Math.max(-(h-SIZE)/2, Math.min((h-SIZE)/2, offsetY));
+}
+
+function resetCrop() {
+  scale = 1; offsetX = 0; offsetY = 0;
+  $("zoom").value = "1";
+  draw();
+}
+
+async function loadFile(file) {
+  if (!file) return;
+  if (!["image/png","image/jpeg","image/webp"].includes(file.type)) {
+    message("Unsupported image format.", "不支持此图片格式。");
+    return;
+  }
+  if (file.size > 50 * 1024 * 1024) {
+    message("Please select an image under 50 MB.", "请选择小于 50 MB 的图片。");
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  const image = new Image();
+  try {
+    image.src = url;
+    await image.decode();
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error("Invalid image");
+    const previous = objectURL;
+    objectURL = url;
+    img = image;
+    if (previous) URL.revokeObjectURL(previous);
+    ["zoom","reset","large","small"].forEach(id => $(id).disabled = false);
+    resetCrop();
+    message("Artwork ready.", "封面已载入。");
+  } catch (err) {
+    URL.revokeObjectURL(url);
+    message("Could not read image.", "无法读取图片。");
+  }
+}
+
+$("file").addEventListener("change", e => loadFile(e.target.files[0]));
+$("drop").addEventListener("click", () => $("file").click());
+$("drop").addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault(); $("file").click();
+  }
+});
+$("drop").addEventListener("dragover", e => e.preventDefault());
+$("drop").addEventListener("drop", e => {
+  e.preventDefault();
+  loadFile(e.dataTransfer.files[0]);
+});
+$("zoom").addEventListener("input", e => {
+  scale = Number(e.target.value);
+  constrain(); draw();
+});
+$("reset").addEventListener("click", resetCrop);
+
+canvas.addEventListener("pointerdown", e => {
+  if (!img) return;
+  dragging = true;
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX-rect.left)*SIZE/rect.width;
+  const y = (e.clientY-rect.top)*SIZE/rect.height;
+  draggingText = textHit(x,y);
+  lastX = e.clientX; lastY = e.clientY;
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove", e => {
+  if (!dragging || !img) return;
+  const ratio = SIZE / canvas.getBoundingClientRect().width;
+  const dx = (e.clientX-lastX)*ratio;
+  const dy = (e.clientY-lastY)*ratio;
+  if (draggingText) {
+    textX = Math.max(0,Math.min(SIZE,textX+dx));
+    textY = Math.max(0,Math.min(SIZE,textY+dy));
+  } else {
+    offsetX += dx;
+    offsetY += dy;
+  }
+  lastX = e.clientX; lastY = e.clientY;
+  constrain(); draw();
+});
+function stopDrag() { dragging = false; draggingText = false; }
+canvas.addEventListener("pointerup", stopDrag);
+canvas.addEventListener("pointercancel", stopDrag);
+
+function makeBlob(size) {
+  return new Promise((resolve, reject) => {
+    const out = document.createElement("canvas");
+    out.width = out.height = size;
+    const c = out.getContext("2d");
+    if (!c) { reject(new Error("Canvas unavailable")); return; }
+    const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
+    const factor = size / SIZE;
+    const w = img.naturalWidth * base * scale * factor;
+    const h = img.naturalHeight * base * scale * factor;
+    c.drawImage(img,
+      (size-w)/2+offsetX*factor,
+      (size-h)/2+offsetY*factor,w,h);
+    drawText(c, factor);
+    out.toBlob(blob => {
+      if (blob) resolve(blob);
+      else reject(new Error("Export failed"));
+    }, $("format").value, 0.95);
+  });
+}
+
+async function exportSize(size) {
+  if (!img) return;
+  try {
+    message("Preparing artwork…", "正在生成封面……");
+    const blob = await makeBlob(size);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "goldisle-cover-" + size +
+      ($("format").value === "image/png" ? ".png" : ".jpg");
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    message("Export ready.", "封面已导出。");
+  } catch (e) {
+    message("Export failed. Try a smaller source image.",
+      "导出失败，请尝试较小的原始图片。");
+  }
+}
+
+$("large").addEventListener("click", () => exportSize(3000));
+$("small").addEventListener("click", () => exportSize(1400));
+["showText","coverText","fontSize","lineSpacing","textColor"].forEach(id => {
+  $(id).addEventListener("input", draw);
+});
+$("fontSize").addEventListener("input", () => {
+  $("fontSizeValue").textContent = $("fontSize").value;
+});
+$("lineSpacing").addEventListener("input", () => {
+  $("lineSpacingValue").textContent = Number($("lineSpacing").value).toFixed(2);
+});
+function syncColors() {
+  const selected = $("textColor").value.toLowerCase();
+  document.querySelectorAll("[data-color]").forEach(button => {
+    button.classList.toggle("active",button.dataset.color === selected);
+  });
+}
+document.querySelectorAll("[data-color]").forEach(button => {
+  button.addEventListener("click", () => {
+    $("textColor").value = button.dataset.color;
+    syncColors();draw();
+  });
+});
+$("textColor").addEventListener("input",syncColors);
+document.querySelectorAll("[data-align]").forEach(button => {
+  button.addEventListener("click", () => {
+    textAlignMode = button.dataset.align;
+    document.querySelectorAll("[data-align]").forEach(b => {
+      b.classList.toggle("active",b===button);
+    });
+    draw();
+  });
+});
+syncColors();
+
+$("language").addEventListener("click", () => {
+  language = language === "en" ? "zh" : "en";
+  document.documentElement.lang = language;
+  document.querySelectorAll("[data-en]").forEach(el => {
+    el.textContent = el.dataset[language];
+  });
+  $("status").textContent = "";
+  draw();
+});
+draw();
+</script>
+</body>
+</html>
+
