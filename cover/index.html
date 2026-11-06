@@ -69,22 +69,22 @@ button.action{
 button.primary{background:var(--red);color:white;border-color:var(--red)}
 button.green{background:#39765b;color:white;border-color:#39765b}
 .text-tools{border-top:1px solid var(--line);margin-top:30px;padding-top:28px}
-.text-tools textarea{
- width:100%;padding:13px;background:transparent;
- border:1px solid var(--line);color:var(--ink);
-}
-.text-tools input[type=color]{width:60px;height:38px;cursor:pointer}
-.text-tools textarea{min-height:100px;resize:vertical;font:inherit;line-height:1.5}
-.align-buttons,.color-presets{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
-.align-buttons button{flex:1;padding:11px 5px;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer}
-.align-buttons button.active{background:var(--ink);color:var(--paper)}
-.color-presets button{width:34px;height:34px;border-radius:50%;border:1px solid #999;cursor:pointer}
-.color-presets button.active{outline:2px solid var(--red);outline-offset:3px}
-.value-readout{float:right;color:var(--muted);font-size:12px}
-.text-tools .control{margin:14px 0}
+ .text-tools .control{margin:14px 0}
 .text-tools label{font-size:13px}
 .text-tools input[type=checkbox]{accent-color:var(--red)}
-
+.layer-card{border:1px solid var(--line);padding:15px;margin:12px 0;background:rgba(255,255,255,.25);cursor:pointer}
+.layer-card.selected{border-color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
+.layer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px}
+.layer-title{font-size:11px;letter-spacing:1.2px;color:var(--muted)}
+.layer-delete{background:none;border:0;color:var(--red);cursor:pointer;padding:5px;font-size:12px}
+.layer-input{width:100%;padding:11px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit}
+.layer-size{display:flex;justify-content:space-between;margin-top:13px;font-size:12px;color:var(--muted)}
+.layer-colors{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.layer-colors button{width:27px;height:27px;border:1px solid #aaa;border-radius:50%;cursor:pointer}
+.layer-colors button.active{outline:2px solid var(--red);outline-offset:2px}
+.layer-colors input[type=color]{width:38px;height:30px;cursor:pointer;border:0;background:none;padding:0}
+.add-layer{width:100%;padding:13px;border:1px dashed var(--red);background:transparent;color:var(--red);cursor:pointer;margin:10px 0 16px}
+.add-layer:hover{background:#efe9e0}
 button:disabled{opacity:.4;cursor:not-allowed}
 button.action:not(:disabled):hover{filter:brightness(.93)}
 select{
@@ -156,56 +156,13 @@ footer{
 
 
       <div class="text-tools">
-        <h2 data-en="02 / COVER TEXT"
-            data-zh="02 / 封面文字">02 / COVER TEXT</h2>
-
-        <div class="control">
-          <label>
-            <input type="checkbox" id="showText">
-            <span data-en="Enable text" data-zh="启用文字">
-              Enable text
-            </span>
-          </label>
-        </div>
-
-        <div class="label" data-en="Text" data-zh="文字内容">Text</div>
-        <textarea id="coverText" maxlength="500" placeholder="Album title&#10;Artist&#10;Subtitle"></textarea>
-
-        <div class="label" data-en="Font size" data-zh="文字大小">
-          Font size
-        </div>
-        <span class="value-readout" id="fontSizeValue">55</span>
-        <input type="range" id="fontSize" min="15" max="130" value="55">
-        <div class="label" data-en="Line spacing" data-zh="行距">Line spacing</div>
-        <span class="value-readout" id="lineSpacingValue">1.30</span>
-        <input type="range" id="lineSpacing" min="0.9" max="2.5" step="0.05" value="1.3">
-        <div class="label" data-en="Text alignment" data-zh="文字对齐">Text alignment</div>
-        <div class="align-buttons">
-          <button type="button" data-align="left" data-en="Left" data-zh="左对齐">Left</button>
-          <button type="button" data-align="center" class="active" data-en="Center" data-zh="居中">Center</button>
-          <button type="button" data-align="right" data-en="Right" data-zh="右对齐">Right</button>
-        </div>
-
-        <div class="label" data-en="Text color" data-zh="文字颜色">
-          Text color
-        </div>
-        <div class="color-presets" id="colorPresets">
-          <button type="button" data-color="#ffffff" style="background:#ffffff" aria-label="White" title="White"></button>
-          <button type="button" data-color="#171717" style="background:#171717" aria-label="Black" title="Black"></button>
-          <button type="button" data-color="#d9b477" style="background:#d9b477" aria-label="Gold" title="Gold"></button>
-          <button type="button" data-color="#b04438" style="background:#b04438" aria-label="Red" title="Red"></button>
-          <button type="button" data-color="#39765b" style="background:#39765b" aria-label="Green" title="Green"></button>
-          <button type="button" data-color="#a6a6a6" style="background:#a6a6a6" aria-label="Grey" title="Grey"></button>
-        </div>
-        <label for="textColor" data-en="Custom color" data-zh="自定义颜色">Custom color</label>
-        <input type="color" id="textColor" value="#ffffff">
-
-        <p class="note"
-          data-en="Drag the text on the artwork to position it. Text is included in exports."
-          data-zh="直接拖动封面上的文字调整位置，导出图片会包含文字。">
-          Drag the text on the artwork to position it.
-          Text is included in exports.
-        </p>
+        <h2 data-en="02 / COVER TEXT" data-zh="02 / 封面文字">02 / COVER TEXT</h2>
+        <div class="control"><label><input type="checkbox" id="showText" checked>
+          <span data-en="Enable text" data-zh="启用文字">Enable text</span></label></div>
+        <div id="layers" aria-label="Text layers"></div>
+        <button type="button" id="addLayer" class="add-layer" data-en="＋ Add text layer" data-zh="＋ 增加文字层">＋ Add text layer</button>
+        <p class="note" data-en="Each line has its own size, color and position. Click or drag a line on the artwork to select and move it. Text is included in exports."
+           data-zh="每行文字可独立调整字号、颜色和位置。在封面上点击或拖动文字即可选中和移动，导出时会保留文字。">Each line has its own size, color and position. Click or drag a line on the artwork to select and move it. Text is included in exports.</p>
       </div>
 
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -225,256 +182,182 @@ footer{
 <script>
 "use strict";
 const $ = id => document.getElementById(id);
-const canvas = $("preview");
-const ctx = canvas.getContext("2d");
-let img = null;
-let objectURL = null;
-let language = "en";
-let scale = 1, offsetX = 0, offsetY = 0;
-let dragging = false, lastX = 0, lastY = 0;
-let draggingText = false;
-let textX = 450, textY = 450;
-
+const canvas = $("preview"), ctx = canvas.getContext("2d");
 const SIZE = 900;
-
-function message(en, zh) {
-  $("status").textContent = language === "zh" ? zh : en;
+const palette = ["#ffffff","#171717","#d9b477","#b04438","#39765b","#a6a6a6"];
+let img = null, objectURL = null, language = "en";
+let scale = 1, offsetX = 0, offsetY = 0;
+let dragging = false, dragLayer = null, lastX = 0, lastY = 0;
+let layers = [], selectedId = null, nextId = 1;
+function message(en,zh){ $("status").textContent = language === "zh" ? zh : en; }
+function addLayer(text="",size=55,color="#ffffff",x=450,y=450){
+  const layer = {id:nextId++,text,size,color,x,y};
+  layers.push(layer); selectedId=layer.id; renderLayers(); draw();
+  return layer;
 }
-
-function draw() {
-  ctx.clearRect(0, 0, SIZE, SIZE);
-  ctx.fillStyle = "#ddd6ca";
-  ctx.fillRect(0, 0, SIZE, SIZE);
-  if (!img) {
-    ctx.fillStyle = "#8a8176";
-    ctx.textAlign = "center";
-    ctx.font = "16px sans-serif";
-    ctx.fillText(language === "zh" ? "封面预览" : "ARTWORK PREVIEW", SIZE/2, SIZE/2);
-    return;
-  }
-  const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
-  const w = img.naturalWidth * base * scale;
-  const h = img.naturalHeight * base * scale;
-  ctx.drawImage(img, (SIZE-w)/2+offsetX, (SIZE-h)/2+offsetY, w, h);
-  drawText(ctx, 1);
-}
-
-let textAlignMode = "center";
-function textLayout(c, factor) {
-  const lines = $("coverText").value.split(/\r?\n/);
-  const fontSize = Number($("fontSize").value) * factor;
-  const lineHeight = fontSize * Number($("lineSpacing").value);
-  c.font = "bold " + fontSize + "px Georgia, serif";
-  const naturalWidth = Math.max(1,...lines.map(line => c.measureText(line).width));
-  const maxWidth = 850 * factor;
-  const width = Math.min(naturalWidth,maxWidth);
-  const height = fontSize + (lines.length-1)*lineHeight;
-  return {lines,fontSize,lineHeight,maxWidth,width,height};
-}
-function drawText(c, factor) {
-  if (!$("showText").checked || !$("coverText").value.trim()) return;
-  c.save();
-  const layout = textLayout(c,factor);
-  c.fillStyle = $("textColor").value;
-  c.textAlign = textAlignMode;
-  c.textBaseline = "middle";
-  c.shadowColor = "rgba(0,0,0,.35)";
-  c.shadowBlur = 3 * factor;
-  const y0 = textY*factor-(layout.lines.length-1)*layout.lineHeight/2;
-  layout.lines.forEach((line,i) => {
-    c.fillText(line,textX*factor,y0+i*layout.lineHeight,layout.maxWidth);
-  });
-  c.restore();
-}
-function textHit(x,y) {
-  if (!$("showText").checked || !$("coverText").value.trim()) return false;
-  ctx.save();
-  const layout = textLayout(ctx,1);
-  ctx.restore();
-  let left=textX;
-  if (textAlignMode === "center") left-=layout.width/2;
-  if (textAlignMode === "right") left-=layout.width;
-  return x>=left-15 && x<=left+layout.width+15 &&
-         Math.abs(y-textY)<=layout.height/2+15;
-}
-
-function constrain() {
-  if (!img) return;
-  const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
-  const w = img.naturalWidth * base * scale;
-  const h = img.naturalHeight * base * scale;
-  offsetX = Math.max(-(w-SIZE)/2, Math.min((w-SIZE)/2, offsetX));
-  offsetY = Math.max(-(h-SIZE)/2, Math.min((h-SIZE)/2, offsetY));
-}
-
-function resetCrop() {
-  scale = 1; offsetX = 0; offsetY = 0;
-  $("zoom").value = "1";
-  draw();
-}
-
-async function loadFile(file) {
-  if (!file) return;
-  if (!["image/png","image/jpeg","image/webp"].includes(file.type)) {
-    message("Unsupported image format.", "不支持此图片格式。");
-    return;
-  }
-  if (file.size > 50 * 1024 * 1024) {
-    message("Please select an image under 50 MB.", "请选择小于 50 MB 的图片。");
-    return;
-  }
-  const url = URL.createObjectURL(file);
-  const image = new Image();
-  try {
-    image.src = url;
-    await image.decode();
-    if (!image.naturalWidth || !image.naturalHeight) throw new Error("Invalid image");
-    const previous = objectURL;
-    objectURL = url;
-    img = image;
-    if (previous) URL.revokeObjectURL(previous);
-    ["zoom","reset","large","small"].forEach(id => $(id).disabled = false);
-    resetCrop();
-    message("Artwork ready.", "封面已载入。");
-  } catch (err) {
-    URL.revokeObjectURL(url);
-    message("Could not read image.", "无法读取图片。");
-  }
-}
-
-$("file").addEventListener("change", e => loadFile(e.target.files[0]));
-$("drop").addEventListener("click", () => $("file").click());
-$("drop").addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault(); $("file").click();
-  }
-});
-$("drop").addEventListener("dragover", e => e.preventDefault());
-$("drop").addEventListener("drop", e => {
-  e.preventDefault();
-  loadFile(e.dataTransfer.files[0]);
-});
-$("zoom").addEventListener("input", e => {
-  scale = Number(e.target.value);
-  constrain(); draw();
-});
-$("reset").addEventListener("click", resetCrop);
-
-canvas.addEventListener("pointerdown", e => {
-  if (!img) return;
-  dragging = true;
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX-rect.left)*SIZE/rect.width;
-  const y = (e.clientY-rect.top)*SIZE/rect.height;
-  draggingText = textHit(x,y);
-  lastX = e.clientX; lastY = e.clientY;
-  canvas.setPointerCapture(e.pointerId);
-});
-canvas.addEventListener("pointermove", e => {
-  if (!dragging || !img) return;
-  const ratio = SIZE / canvas.getBoundingClientRect().width;
-  const dx = (e.clientX-lastX)*ratio;
-  const dy = (e.clientY-lastY)*ratio;
-  if (draggingText) {
-    textX = Math.max(0,Math.min(SIZE,textX+dx));
-    textY = Math.max(0,Math.min(SIZE,textY+dy));
-  } else {
-    offsetX += dx;
-    offsetY += dy;
-  }
-  lastX = e.clientX; lastY = e.clientY;
-  constrain(); draw();
-});
-function stopDrag() { dragging = false; draggingText = false; }
-canvas.addEventListener("pointerup", stopDrag);
-canvas.addEventListener("pointercancel", stopDrag);
-
-function makeBlob(size) {
-  return new Promise((resolve, reject) => {
-    const out = document.createElement("canvas");
-    out.width = out.height = size;
-    const c = out.getContext("2d");
-    if (!c) { reject(new Error("Canvas unavailable")); return; }
-    const base = Math.max(SIZE/img.naturalWidth, SIZE/img.naturalHeight);
-    const factor = size / SIZE;
-    const w = img.naturalWidth * base * scale * factor;
-    const h = img.naturalHeight * base * scale * factor;
-    c.drawImage(img,
-      (size-w)/2+offsetX*factor,
-      (size-h)/2+offsetY*factor,w,h);
-    drawText(c, factor);
-    out.toBlob(blob => {
-      if (blob) resolve(blob);
-      else reject(new Error("Export failed"));
-    }, $("format").value, 0.95);
-  });
-}
-
-async function exportSize(size) {
-  if (!img) return;
-  try {
-    message("Preparing artwork…", "正在生成封面……");
-    const blob = await makeBlob(size);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "goldisle-cover-" + size +
-      ($("format").value === "image/png" ? ".png" : ".jpg");
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-    message("Export ready.", "封面已导出。");
-  } catch (e) {
-    message("Export failed. Try a smaller source image.",
-      "导出失败，请尝试较小的原始图片。");
-  }
-}
-
-$("large").addEventListener("click", () => exportSize(3000));
-$("small").addEventListener("click", () => exportSize(1400));
-["showText","coverText","fontSize","lineSpacing","textColor"].forEach(id => {
-  $(id).addEventListener("input", draw);
-});
-$("fontSize").addEventListener("input", () => {
-  $("fontSizeValue").textContent = $("fontSize").value;
-});
-$("lineSpacing").addEventListener("input", () => {
-  $("lineSpacingValue").textContent = Number($("lineSpacing").value).toFixed(2);
-});
-function syncColors() {
-  const selected = $("textColor").value.toLowerCase();
-  document.querySelectorAll("[data-color]").forEach(button => {
-    button.classList.toggle("active",button.dataset.color === selected);
-  });
-}
-document.querySelectorAll("[data-color]").forEach(button => {
-  button.addEventListener("click", () => {
-    $("textColor").value = button.dataset.color;
-    syncColors();draw();
-  });
-});
-$("textColor").addEventListener("input",syncColors);
-document.querySelectorAll("[data-align]").forEach(button => {
-  button.addEventListener("click", () => {
-    textAlignMode = button.dataset.align;
-    document.querySelectorAll("[data-align]").forEach(b => {
-      b.classList.toggle("active",b===button);
+function selectedLayer(id){ selectedId=id;renderLayers();draw(); }
+function renderLayers(){
+  const host=$("layers");host.replaceChildren();
+  layers.forEach((layer,index)=>{
+    const card=document.createElement("div");
+    card.className="layer-card"+(layer.id===selectedId?" selected":"");
+    card.addEventListener("click",()=>{if(selectedId!==layer.id)selectedLayer(layer.id);});
+    const top=document.createElement("div");top.className="layer-top";
+    const name=document.createElement("span");name.className="layer-title";
+    name.textContent=(language==="zh"?"文字 ":"TEXT ")+(index+1);
+    const del=document.createElement("button");del.type="button";del.className="layer-delete";
+    del.textContent=language==="zh"?"删除":"Delete";
+    del.setAttribute("aria-label",language==="zh"?"删除文字层":"Delete text layer");
+    del.addEventListener("click",e=>{
+      e.stopPropagation();layers=layers.filter(x=>x.id!==layer.id);
+      if(selectedId===layer.id)selectedId=layers.length?layers[layers.length-1].id:null;
+      renderLayers();draw();
     });
-    draw();
+    top.append(name,del);card.append(top);
+    const input=document.createElement("input");input.type="text";input.className="layer-input";
+    input.maxLength=180;input.value=layer.text;
+    input.placeholder=language==="zh"?"输入文字":"Enter text";
+    input.setAttribute("aria-label",language==="zh"?"文字内容":"Text content");
+    input.addEventListener("focus",()=>{selectedId=layer.id;markSelected();draw();});
+    input.addEventListener("input",()=>{layer.text=input.value;draw();});card.append(input);
+    const sizeRow=document.createElement("div");sizeRow.className="layer-size";
+    const sizeLabel=document.createElement("span");sizeLabel.textContent=language==="zh"?"字号":"Font size";
+    const sizeValue=document.createElement("span");sizeValue.textContent=layer.size;
+    sizeRow.append(sizeLabel,sizeValue);card.append(sizeRow);
+    const slider=document.createElement("input");slider.type="range";slider.min="15";slider.max="130";
+    slider.value=layer.size;slider.setAttribute("aria-label",language==="zh"?"字号":"Font size");
+    slider.addEventListener("input",()=>{layer.size=Number(slider.value);sizeValue.textContent=layer.size;draw();});
+    card.append(slider);
+    const colors=document.createElement("div");colors.className="layer-colors";
+    palette.forEach(hex=>{
+      const button=document.createElement("button");button.type="button";button.style.background=hex;
+      button.classList.toggle("active",hex===layer.color.toLowerCase());
+      button.setAttribute("aria-label",hex);button.title=hex;
+      button.addEventListener("click",()=>{layer.color=hex;picker.value=hex;renderLayers();draw();});
+      colors.append(button);
+    });
+    const picker=document.createElement("input");picker.type="color";picker.value=layer.color;
+    picker.setAttribute("aria-label",language==="zh"?"自定义颜色":"Custom color");
+    picker.addEventListener("input",()=>{layer.color=picker.value;colors.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.title===layer.color));draw();});
+    colors.append(picker);card.append(colors);host.append(card);
   });
+}
+function markSelected(){
+  document.querySelectorAll(".layer-card").forEach((card,i)=>card.classList.toggle("selected",layers[i]?.id===selectedId));
+}
+function textBounds(c,layer,factor=1){
+  c.save();c.font="bold "+(layer.size*factor)+"px Georgia, serif";
+  const width=Math.min(c.measureText(layer.text).width,850*factor);
+  c.restore();return {width,height:layer.size*factor};
+}
+function drawText(c,factor){
+  if(!$("showText").checked)return;
+  for(const layer of layers){
+    if(!layer.text.trim())continue;
+    c.save();c.font="bold "+(layer.size*factor)+"px Georgia, serif";
+    c.fillStyle=layer.color;c.textAlign="center";c.textBaseline="middle";
+    c.shadowColor="rgba(0,0,0,.35)";c.shadowBlur=3*factor;
+    c.fillText(layer.text,layer.x*factor,layer.y*factor,850*factor);
+    c.restore();
+  }
+}
+function hitLayer(x,y){
+  if(!$("showText").checked)return null;
+  for(let i=layers.length-1;i>=0;i--){
+    const layer=layers[i];if(!layer.text.trim())continue;
+    const box=textBounds(ctx,layer);
+    if(Math.abs(x-layer.x)<=box.width/2+12 && Math.abs(y-layer.y)<=box.height/2+12)return layer;
+  }
+  return null;
+}
+function draw(){
+  ctx.clearRect(0,0,SIZE,SIZE);ctx.fillStyle="#ddd6ca";ctx.fillRect(0,0,SIZE,SIZE);
+  if(!img){ctx.fillStyle="#8a8176";ctx.textAlign="center";ctx.font="16px sans-serif";
+    ctx.fillText(language==="zh"?"封面预览":"ARTWORK PREVIEW",SIZE/2,SIZE/2);return;}
+  const base=Math.max(SIZE/img.naturalWidth,SIZE/img.naturalHeight);
+  const w=img.naturalWidth*base*scale,h=img.naturalHeight*base*scale;
+  ctx.drawImage(img,(SIZE-w)/2+offsetX,(SIZE-h)/2+offsetY,w,h);
+  drawText(ctx,1);
+}
+function constrain(){
+  if(!img)return;
+  const base=Math.max(SIZE/img.naturalWidth,SIZE/img.naturalHeight);
+  const w=img.naturalWidth*base*scale,h=img.naturalHeight*base*scale;
+  offsetX=Math.max(-(w-SIZE)/2,Math.min((w-SIZE)/2,offsetX));
+  offsetY=Math.max(-(h-SIZE)/2,Math.min((h-SIZE)/2,offsetY));
+}
+function resetCrop(){scale=1;offsetX=0;offsetY=0;$("zoom").value="1";draw();}
+async function loadFile(file){
+  if(!file)return;
+  if(!["image/png","image/jpeg","image/webp"].includes(file.type)){
+    message("Unsupported image format.","不支持此图片格式。");return;}
+  if(file.size>50*1024*1024){message("Please select an image under 50 MB.","请选择小于 50 MB 的图片。");return;}
+  const url=URL.createObjectURL(file),image=new Image();
+  try{image.src=url;await image.decode();
+    if(!image.naturalWidth||!image.naturalHeight)throw new Error("Invalid image");
+    const previous=objectURL;objectURL=url;img=image;if(previous)URL.revokeObjectURL(previous);
+    ["zoom","reset","large","small"].forEach(id=>$(id).disabled=false);
+    resetCrop();message("Artwork ready.","封面已载入。");
+  }catch(err){URL.revokeObjectURL(url);message("Could not read image.","无法读取图片。");}
+}
+$("file").addEventListener("change",e=>loadFile(e.target.files[0]));
+$("drop").addEventListener("click",()=>$("file").click());
+$("drop").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("file").click();}});
+$("drop").addEventListener("dragover",e=>e.preventDefault());
+$("drop").addEventListener("drop",e=>{e.preventDefault();loadFile(e.dataTransfer.files[0]);});
+$("zoom").addEventListener("input",e=>{scale=Number(e.target.value);constrain();draw();});
+$("reset").addEventListener("click",resetCrop);
+canvas.addEventListener("pointerdown",e=>{
+  if(!img)return;
+  const rect=canvas.getBoundingClientRect();
+  const x=(e.clientX-rect.left)*SIZE/rect.width,y=(e.clientY-rect.top)*SIZE/rect.height;
+  dragLayer=hitLayer(x,y);dragging=true;
+  if(dragLayer){selectedId=dragLayer.id;markSelected();}
+  lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId);
 });
-syncColors();
-
-$("language").addEventListener("click", () => {
-  language = language === "en" ? "zh" : "en";
-  document.documentElement.lang = language;
-  document.querySelectorAll("[data-en]").forEach(el => {
-    el.textContent = el.dataset[language];
+canvas.addEventListener("pointermove",e=>{
+  if(!dragging||!img)return;
+  const ratio=SIZE/canvas.getBoundingClientRect().width;
+  const dx=(e.clientX-lastX)*ratio,dy=(e.clientY-lastY)*ratio;
+  if(dragLayer){dragLayer.x=Math.max(0,Math.min(SIZE,dragLayer.x+dx));dragLayer.y=Math.max(0,Math.min(SIZE,dragLayer.y+dy));}
+  else{offsetX+=dx;offsetY+=dy;constrain();}
+  lastX=e.clientX;lastY=e.clientY;draw();
+});
+function stopDrag(){dragging=false;dragLayer=null;}
+canvas.addEventListener("pointerup",stopDrag);canvas.addEventListener("pointercancel",stopDrag);
+function makeBlob(size){
+  return new Promise((resolve,reject)=>{
+    const out=document.createElement("canvas");out.width=out.height=size;
+    const c=out.getContext("2d");if(!c){reject(new Error("Canvas unavailable"));return;}
+    const base=Math.max(SIZE/img.naturalWidth,SIZE/img.naturalHeight),factor=size/SIZE;
+    const w=img.naturalWidth*base*scale*factor,h=img.naturalHeight*base*scale*factor;
+    if($("format").value==="image/jpeg"){c.fillStyle="#ffffff";c.fillRect(0,0,size,size);}
+    c.drawImage(img,(size-w)/2+offsetX*factor,(size-h)/2+offsetY*factor,w,h);
+    drawText(c,factor);
+    out.toBlob(blob=>blob?resolve(blob):reject(new Error("Export failed")),$("format").value,0.95);
   });
-  $("status").textContent = "";
-  draw();
+}
+async function exportSize(size){
+  if(!img)return;
+  try{message("Preparing artwork…","正在生成封面……");
+    const blob=await makeBlob(size),url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;
+    a.download="goldisle-cover-"+size+($("format").value==="image/png"?".png":".jpg");
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    message("Export ready.","封面已导出。");
+  }catch(e){message("Export failed. Try a smaller source image.","导出失败，请尝试较小的原始图片。");}
+}
+$("large").addEventListener("click",()=>exportSize(3000));
+$("small").addEventListener("click",()=>exportSize(1400));
+$("showText").addEventListener("change",draw);
+$("addLayer").addEventListener("click",()=>{const layer=addLayer("",40,"#ffffff",450,450);const inputs=document.querySelectorAll(".layer-input");inputs[inputs.length-1]?.focus();});
+$("language").addEventListener("click",()=>{
+  language=language==="en"?"zh":"en";document.documentElement.lang=language;
+  document.querySelectorAll("[data-en]").forEach(el=>{el.textContent=el.dataset[language];});
+  $("status").textContent="";renderLayers();draw();
 });
+addLayer("",55,"#ffffff",450,450);
 draw();
 </script>
 </body>
