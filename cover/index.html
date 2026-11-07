@@ -70,6 +70,20 @@ button.primary{background:var(--red);color:white;border-color:var(--red)}
 button.green{background:#39765b;color:white;border-color:#39765b}
 .text-tools{border-top:1px solid var(--line);margin-top:30px;padding-top:28px}
  .text-tools .control{margin:14px 0}
+.signature-tools{border-top:1px solid var(--line);margin-top:30px;padding-top:28px}
+.signature-tools h2{font-size:12px;letter-spacing:2px;margin:0 0 20px}
+.signature-modes{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.signature-modes button{flex:1;min-width:72px;padding:10px 6px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-size:12px}
+.signature-modes button.active{background:var(--ink);color:var(--paper)}
+.signature-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:14px 0 6px}
+.signature-colors{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:14px 0}
+.signature-colors button{height:28px;width:28px;border-radius:50%;border:1px solid #999;cursor:pointer}
+.signature-colors button.active{outline:2px solid var(--red);outline-offset:2px}
+.signature-colors input[type=color]{height:30px;width:38px;padding:0;border:0;background:none}
+.signature-actions{display:flex;gap:8px}
+.signature-actions button{flex:1;padding:11px 5px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.signature-actions button:disabled{opacity:.4}
+
 .text-tools label{font-size:13px}
 .text-tools input[type=checkbox]{accent-color:var(--red)}
 .layer-card{border:1px solid var(--line);padding:15px;margin:12px 0;background:rgba(255,255,255,.25);cursor:pointer}
@@ -113,7 +127,7 @@ footer{
 </header>
 
 <main>
-  <div class="eyebrow">AN INDEPENDENT CREATIVE TOOL FOR ARTIST· 001</div>
+  <div class="eyebrow">AN INDEPENDENT CREATIVE TOOL FOR ARTISTS · 001</div>
   <h1>Cover Studio<span style="color:#ad4639">.</span></h1>
   <p class="subtitle" data-en="Prepare your artwork for release. Crop, refine and export — privately, in your browser."
      data-zh="为作品准备正式封面。裁剪、调整、导出——全部在浏览器本地完成。">
@@ -165,6 +179,24 @@ footer{
            data-zh="每行文字可独立调整字号、颜色和位置。在封面上点击或拖动文字即可选中和移动，导出时会保留文字。">Each line has its own size, color and position. Click or drag a line on the artwork to select and move it. Text is included in exports.</p>
       </div>
 
+      <section class="signature-tools" aria-label="Artist signature">
+        <h2 data-en="03 / ARTIST SIGNATURE" data-zh="03 / 艺术家签名">03 / ARTIST SIGNATURE</h2>
+        <div class="signature-modes">
+          <button type="button" id="modeMove" class="active" data-en="Move" data-zh="移动">Move</button>
+          <button type="button" id="modePen" data-en="✎ Pen" data-zh="✎ 签字笔">✎ Pen</button>
+          <button type="button" id="modeEraser" data-en="Eraser" data-zh="橡皮擦">Eraser</button>
+        </div>
+        <div class="signature-row"><span data-en="Pen / eraser width" data-zh="笔迹 / 橡皮粗细">Pen / eraser width</span><span id="penWidthValue">5</span></div>
+        <input type="range" id="penWidth" min="1" max="40" value="5" step="1" aria-label="Pen width">
+        <div class="signature-colors" id="signatureColors"></div>
+        <div class="signature-actions">
+          <button type="button" id="undoSignature" data-en="Undo" data-zh="撤销">Undo</button>
+          <button type="button" id="clearSignature" data-en="Clear signature" data-zh="清除签名">Clear signature</button>
+        </div>
+        <p class="note" data-en="Choose Pen to sign directly on the cover. Eraser removes strokes without touching the artwork. Choose Move to reposition the signature as a whole, or drag the image and text."
+           data-zh="选择签字笔直接在封面书写。橡皮擦只擦笔迹，不影响原图。选择移动，可整体拖动签名，也可继续移动图片和文字。">Choose Pen to sign directly on the cover. Eraser removes strokes without touching the artwork. Choose Move to reposition the signature as a whole, or drag the image and text.</p>
+      </section>
+
       <p class="status" id="status" role="status" aria-live="polite"></p>
       <p class="note" data-en="Your artwork stays on your device. No account, no upload, no server processing."
         data-zh="图片始终保留在你的设备上。无需账户、不上传、不经过服务器处理。">
@@ -189,6 +221,46 @@ let img = null, objectURL = null, language = "en";
 let scale = 1, offsetX = 0, offsetY = 0;
 let dragging = false, dragLayer = null, lastX = 0, lastY = 0;
 let layers = [], selectedId = null, nextId = 1;
+let signatureMode="move", strokes=[], signatureHistory=[], activeStroke=null, signatureDrag=false;
+let signatureColor="#ffffff", signatureWidth=5;
+function setSignatureMode(mode){
+  signatureMode=mode;
+  for(const [name,id] of [["move","modeMove"],["pen","modePen"],["eraser","modeEraser"]]) $(id).classList.toggle("active",name===mode);
+  canvas.style.cursor=mode==="move"?"grab":"crosshair";
+}
+function saveSignatureHistory(){
+  signatureHistory.push(strokes.map(s=>({color:s.color,width:s.width,points:s.points.map(p=>({...p}))})));
+  if(signatureHistory.length>50)signatureHistory.shift();
+}
+function strokeHit(stroke,x,y,radius){
+  const pts=stroke.points;
+  for(let i=0;i<pts.length;i++){
+    const a=pts[i],b=pts[Math.min(i+1,pts.length-1)];
+    const dx=b.x-a.x,dy=b.y-a.y,den=dx*dx+dy*dy;
+    const t=den?Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/den)):0;
+    if(Math.hypot(x-(a.x+t*dx),y-(a.y+t*dy))<=radius+stroke.width/2)return true;
+  }
+  return false;
+}
+function eraseAt(x,y){
+  const before=strokes.length;
+  strokes=strokes.filter(stroke=>!strokeHit(stroke,x,y,signatureWidth/2+3));
+  if(before!==strokes.length)draw();
+}
+function signatureHit(x,y){return strokes.some(s=>strokeHit(s,x,y,14));}
+function drawSignature(c,factor){
+  for(const stroke of strokes){
+    if(!stroke.points.length)continue;
+    c.save();c.strokeStyle=stroke.color;c.fillStyle=stroke.color;
+    c.lineWidth=stroke.width*factor;c.lineCap="round";c.lineJoin="round";
+    c.beginPath();c.moveTo(stroke.points[0].x*factor,stroke.points[0].y*factor);
+    for(let i=1;i<stroke.points.length;i++)c.lineTo(stroke.points[i].x*factor,stroke.points[i].y*factor);
+    if(stroke.points.length===1){c.arc(stroke.points[0].x*factor,stroke.points[0].y*factor,stroke.width*factor/2,0,Math.PI*2);c.fill();}
+    else c.stroke();
+    c.restore();
+  }
+}
+
 function message(en,zh){ $("status").textContent = language === "zh" ? zh : en; }
 function addLayer(text="",size=55,color="#ffffff",x=450,y=450){
   const layer = {id:nextId++,text,size,color,x,y};
@@ -278,6 +350,7 @@ function draw(){
   const w=img.naturalWidth*base*scale,h=img.naturalHeight*base*scale;
   ctx.drawImage(img,(SIZE-w)/2+offsetX,(SIZE-h)/2+offsetY,w,h);
   drawText(ctx,1);
+  drawSignature(ctx,1);
 }
 function constrain(){
   if(!img)return;
@@ -311,19 +384,33 @@ canvas.addEventListener("pointerdown",e=>{
   if(!img)return;
   const rect=canvas.getBoundingClientRect();
   const x=(e.clientX-rect.left)*SIZE/rect.width,y=(e.clientY-rect.top)*SIZE/rect.height;
-  dragLayer=hitLayer(x,y);dragging=true;
-  if(dragLayer){selectedId=dragLayer.id;markSelected();}
-  lastX=e.clientX;lastY=e.clientY;canvas.setPointerCapture(e.pointerId);
+  lastX=e.clientX;lastY=e.clientY;
+  if(signatureMode==="pen"){
+    saveSignatureHistory();activeStroke={color:signatureColor,width:signatureWidth,points:[{x,y}]};
+    strokes.push(activeStroke);draw();
+  }else if(signatureMode==="eraser"){
+    saveSignatureHistory();eraseAt(x,y);
+  }else{
+    dragLayer=hitLayer(x,y);signatureDrag=!dragLayer&&signatureHit(x,y);
+    dragging=true;
+    if(dragLayer){selectedId=dragLayer.id;markSelected();}
+  }
+  canvas.setPointerCapture(e.pointerId);
 });
 canvas.addEventListener("pointermove",e=>{
-  if(!dragging||!img)return;
-  const ratio=SIZE/canvas.getBoundingClientRect().width;
+  if(!img)return;
+  const rect=canvas.getBoundingClientRect(),ratio=SIZE/rect.width;
+  const x=(e.clientX-rect.left)*ratio,y=(e.clientY-rect.top)*ratio;
+  if(activeStroke){activeStroke.points.push({x,y});draw();return;}
+  if(signatureMode==="eraser" && canvas.hasPointerCapture(e.pointerId)){eraseAt(x,y);return;}
+  if(!dragging)return;
   const dx=(e.clientX-lastX)*ratio,dy=(e.clientY-lastY)*ratio;
   if(dragLayer){dragLayer.x=Math.max(0,Math.min(SIZE,dragLayer.x+dx));dragLayer.y=Math.max(0,Math.min(SIZE,dragLayer.y+dy));}
+  else if(signatureDrag){for(const stroke of strokes)for(const p of stroke.points){p.x+=dx;p.y+=dy;}}
   else{offsetX+=dx;offsetY+=dy;constrain();}
   lastX=e.clientX;lastY=e.clientY;draw();
 });
-function stopDrag(){dragging=false;dragLayer=null;}
+function stopDrag(){dragging=false;dragLayer=null;signatureDrag=false;activeStroke=null;}
 canvas.addEventListener("pointerup",stopDrag);canvas.addEventListener("pointercancel",stopDrag);
 function makeBlob(size){
   return new Promise((resolve,reject)=>{
@@ -334,6 +421,7 @@ function makeBlob(size){
     if($("format").value==="image/jpeg"){c.fillStyle="#ffffff";c.fillRect(0,0,size,size);}
     c.drawImage(img,(size-w)/2+offsetX*factor,(size-h)/2+offsetY*factor,w,h);
     drawText(c,factor);
+    drawSignature(c,factor);
     out.toBlob(blob=>blob?resolve(blob):reject(new Error("Export failed")),$("format").value,0.95);
   });
 }
@@ -357,6 +445,24 @@ $("language").addEventListener("click",()=>{
   document.querySelectorAll("[data-en]").forEach(el=>{el.textContent=el.dataset[language];});
   $("status").textContent="";renderLayers();draw();
 });
+for(const hex of palette){
+  const b=document.createElement("button");b.type="button";b.style.background=hex;b.title=hex;
+  b.setAttribute("aria-label",hex);
+  b.addEventListener("click",()=>{signatureColor=hex;signaturePicker.value=hex;markSignatureColor();});
+  $("signatureColors").append(b);
+}
+const signaturePicker=document.createElement("input");signaturePicker.type="color";signaturePicker.value=signatureColor;
+signaturePicker.setAttribute("aria-label","Custom signature color");
+signaturePicker.addEventListener("input",()=>{signatureColor=signaturePicker.value;markSignatureColor();});
+$("signatureColors").append(signaturePicker);
+function markSignatureColor(){
+  $("signatureColors").querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.title===signatureColor));
+}
+markSignatureColor();
+[["modeMove","move"],["modePen","pen"],["modeEraser","eraser"]].forEach(([id,mode])=>$(id).addEventListener("click",()=>setSignatureMode(mode)));
+$("penWidth").addEventListener("input",e=>{signatureWidth=Number(e.target.value);$("penWidthValue").textContent=signatureWidth;});
+$("undoSignature").addEventListener("click",()=>{if(signatureHistory.length){strokes=signatureHistory.pop();draw();}});
+$("clearSignature").addEventListener("click",()=>{if(strokes.length){saveSignatureHistory();strokes=[];draw();}});
 addLayer("",55,"#ffffff",450,450);
 draw();
 </script>
