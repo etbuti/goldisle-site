@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+
+<title>邹朝霞 Zhaoxia Zou | 中医家学与针法研究</title>
+
+<meta name="description"
+ content="邹朝霞个人研究档案。中医家学传承、邹氏中医美容针法、传统针文化研究与传播。">
+
+<meta name="robots" content="index,follow">
+
+<style>
+:root {
+  --paper: #f8f6f0;
+  --white: #fffefa;
+  --ink: #292d29;
+  --muted: #72756e;
+  --gold: #ad9972;
+  --line: #dedbd1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family:
+    "Songti SC", "STSong", "Noto Serif CJK SC",
+    "SimSun", Georgia, serif;
+  line-height: 1.95;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover { color: #927a50; }
+
+button { font: inherit; }
+
+.wrap {
+  max-width: 940px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+
+.topbar {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  font-family: Arial, sans-serif;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.lang-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 9px 6px;
+  font-size: 13px;
+}
+
+.lang-switch button.active {
+  color: var(--ink);
+  font-weight: bold;
+  border-bottom: 1px solid var(--gold);
+}
+
+.hero {
+  padding: 78px 0 48px;
+  text-align: center;
+}
+
+.hero .eyebrow {
+  color: var(--gold);
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.hero h1 {
+  margin: 20px 0 0;
+  font-size: clamp(42px, 7vw, 66px);
+  font-weight: 400;
+  letter-spacing: 10px;
+  line-height: 1.35;
+}
+
+.hero .latin {
+  margin: 12px 0 25px;
+  font-family: Georgia, serif;
+  letter-spacing: 4px;
+  font-size: 17px;
+  color: var(--muted);
+}
+
+.hero .subtitle {
+  font-size: 16px;
+  letter-spacing: 3px;
+}
+
+.hero .motto {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.hero-image {
+  margin: 0 auto 65px;
+  max-width: 700px;
+}
+
+.hero-image img {
+  width: 100%;
+  max-height: 700px;
+  object-fit: contain;
+  display: block;
+  border-radius: 3px;
+}
+
+.photo-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+section {
+  padding: 50px 0 55px;
+  border-top: 1px solid var(--line);
+}
+
+.section-number {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  color: var(--gold);
+}
+
+h2 {
+  margin: 10px 0 30px;
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+p {
+  margin: 0 0 20px;
+  font-size: 15px;
+}
+
+.lead {
+  font-size: 17px;
+  line-height: 2.15;
+}
+
+.affiliation {
+  margin-top: 24px;
+  padding-left: 18px;
+  border-left: 2px solid var(--gold);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.research-title {
+  color: #746345;
+  font-size: 19px;
+  margin: 25px 0;
+  font-weight: normal;
+}
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 35px 0;
+}
+
+.principle {
+  background: var(--white);
+  padding: 22px 12px;
+  text-align: center;
+  border: 1px solid var(--line);
+}
+
+.principle strong {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.principle small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.secondary-photo {
+  max-width: 560px;
+  margin: 38px auto 0;
+}
+
+.secondary-photo img {
+  width: 100%;
+  display: block;
+  border-radius: 3px;
+}
+
+.contact {
+  background: var(--white);
+  padding: 36px;
+  border: 1px solid var(--line);
+}
+
+.contact p { margin-bottom: 12px; }
+
+.contact-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+footer {
+  padding: 45px 20px 60px;
+  text-align: center;
+  color: var(--muted);
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: .5px;
+  line-height: 2;
+}
+
+.en {
+  display: none;
+}
+
+body.english .zh {
+  display: none;
+}
+
+body.english .en {
+  display: block;
+}
+
+body.english .hero h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 6vw, 58px);
+  letter-spacing: 2px;
+}
+
+body.english {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+body.english p {
+  line-height: 1.85;
+}
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 19px; }
+  .hero { padding: 48px 0 35px; }
+  .hero h1 { letter-spacing: 5px; }
+  .hero-image { margin-bottom: 35px; }
+  section { padding: 38px 0; }
+  .principles { gap: 6px; }
+  .principle { padding: 15px 5px; }
+  .principle strong { font-size: 17px; }
+  .principle small { font-size: 11px; }
+  .contact { padding: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap topbar">
+    <div class="brand">GOLDISLE LIGHT ORG</div>
+    <div class="lang-switch" aria-label="Language">
+      <button id="btn-zh" class="active"
+        type="button" aria-pressed="true"
+        onclick="setLanguage('zh')">中文</button>
+      <span aria-hidden="true">/</span>
+      <button id="btn-en"
+        type="button" aria-pressed="false"
+        onclick="setLanguage('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 人物标题 -->
+  <div class="hero">
+    <div class="eyebrow">
+      PERSONAL & RESEARCH ARCHIVE
+    </div>
+
+    <div class="zh">
+      <h1>邹朝霞</h1>
+      <div class="latin">ZHAOXIA ZOU</div>
+      <div class="subtitle">
+        中医家学传承 · 针法研究
+      </div>
+      <div class="motto">
+        承家学之源 · 研针法之道
+      </div>
+    </div>
+
+    <div class="en">
+      <h1>Zhaoxia Zou</h1>
+      <div class="latin">邹朝霞</div>
+      <div class="subtitle">
+        Traditional Chinese Medicine
+        & Acupuncture Research
+      </div>
+      <div class="motto">
+        Family Heritage · Research · Practice
+      </div>
+    </div>
+  </div>
+
+  <!-- 第一张真实照片 -->
+  <figure class="hero-image">
+    <img src="portrait-01.jpg"
+      alt="邹朝霞生活照片 / Portrait of Zhaoxia Zou"
+      fetchpriority="high">
+  </figure>
+
+  <!-- 第一部分：人物 -->
+  <section id="biography">
+    <div class="section-number">01</div>
+
+    <div class="zh">
+      <h2>人物 · 邹朝霞</h2>
+
+      <p class="lead">
+        邹朝霞，出身中医家庭，自幼受到父亲行医
+        经历与家学环境的熏陶，长期关注传统中医
+        针技术的研究与传承。
+      </p>
+
+      <p>
+        现任 Goldisle Light Org 中医九针研究院院长，
+        从事中医针技术研究及传统针文化传播。
+      </p>
+
+      <p>
+        在整理历史文献、研究地方民间用针经验的
+        过程中，她逐渐将研究方向集中于头面部
+        美容施针，并探索形成个人针法体系。
+      </p>
+
+      <div class="affiliation">
+        Goldisle Light Org<br>
+        中医九针研究院 · 院长
+      </div>
+    </div>
+
+    <div class="en">
+      <h2>Biography</h2>
+
+      <p class="lead">
+        Zhaoxia Zou comes from a family with a
+        background in traditional Chinese medicine.
+        Her father's medical practice and her family
+        environment shaped her early interest in
+        Chinese acupuncture.
+      </p>
+
+      <p>
+        She currently serves as Director of the
+        Institute for Research on the Nine Needles
+        of Traditional Chinese Medicine at
+        Goldisle Light Org.
+      </p>
+
+      <p>
+        Her work focuses on traditional needling
+        techniques, historical research, and the
+        preservation and communication of
+        acupuncture culture.
+      </p>
+
+      <p>
+        Through the study of historical sources and
+        local needling traditions, she has developed
+        a particular interest in cosmetic acupuncture
+        of the face and head.
+      </p>
+
+      <div class="affiliation">
+        Goldisle Light Org<br>
+        Director, Institute for Research on
+        the Nine Needles of Traditional Chinese Medicine
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二部分：家学 -->
+  <section id="heritage">
+    <div class="section-number">02</div>
+
+    <div class="zh">
+      <h2>家学 · 源流</h2>
+
+      <p>
+        邹朝霞的中医研究始于家庭熏陶。
+        其父邹德（姓名暂记，待核实）从事中医实践，
+        家庭中的医学传统和生活经历，
+        为她日后的学习与研究提供了启蒙。
+      </p>
+
+      <p>
+        在继承家学的同时，她亦关注地方民间医药
+        经验及传统医学文献，尝试通过资料整理、
+        比较研究和个人实践，探索传统针法的
+        当代表达。
+      </p>
+
+      <p>
+        她所关注的历史线索之一，是与北亳地区
+        相关的地方传统及民间针法。
+      </p>
+    </div>
+
+    <div class="en">
+      <h2>Family Heritage</h2>
+
+      <p>
+        Zhaoxia Zou's interest in traditional Chinese
+        medicine began in her family environment.
+        Her father, provisionally recorded as Zou De,
+        practised traditional Chinese medicine.
+        His name remains subject to confirmation.
+      </p>
+
+      <p>
+        Alongside her family heritage, she has studied
+        local medical traditions and historical
+        materials, seeking to understand and develop
+        traditional acupuncture practices through
+        research and personal exploration.
+      </p>
+
+      <p>
+        One area of particular interest is the local
+        needling tradition associated with the
+        historical region of Bei Bo, or Northern Bo.
+      </p>
+    </div>
+  </section>
+
+  <!-- 第三部分：针法 -->
+  <section id="acupuncture">
+    <div class="section-number">03</div>
+
+    <div class="zh">
+      <h2>针法 · 研究</h2>
+
+      <h3 class="research-title">
+        邹氏中医美容针法
+      </h3>
+
+      <p>
+        邹氏中医美容针法，是邹朝霞在研究整理
+        历史资料及地方民间用针经验的基础上，
+        经个人探索与实践，逐步形成的针法。
+      </p>
+
+      <p>
+        相关研究涉及北亳传统文化。当地民间有
+        古老用针技艺源自商代的传说，但其具体
+        历史传承关系仍需要进一步的文献和
+        考古证据支持。
+      </p>
+
+      <p>
+        在方法理念上，强调辨证与个体差异，
+        重视因人、因时、因地的具体条件，
+        不拘泥于单一固定施针模式。
+      </p>
+    </div>
+
+    <div class="en">
+      <h2>Acupuncture Research</h2>
+
+      <h3 class="research-title">
+        Zou's Traditional Chinese Medicine
+        Cosmetic Acupuncture
+      </h3>
+
+      <p>
+        Zou's Cosmetic Acupuncture is an individual
+        approach developed by Zhaoxia Zou through
+        the study of historical materials, local
+        needling practices, and her own research
+        and practical exploration.
+      </p>
+
+      <p>
+        Her research includes traditions associated
+        with Northern Bo (Bei Bo). Local oral
+        accounts suggest that certain needling
+        practices originated in the Shang dynasty,
+        but a continuous historical lineage has
+        not been established by available
+        documentary or archaeological evidence.
+      </p>
+
+      <p>
+        Her approach emphasises traditional
+        differentiation, individual circumstances,
+        timing, and environmental conditions,
+        rather than a single fixed needling method.
+      </p>
+    </div>
+
+    <div class="principles">
+      <div class="principle">
+        <strong class="zh">因人</strong>
+        <strong class="en">Person</strong>
+        <small class="zh">个体差异</small>
+        <small class="en">Individual</small>
+      </div>
+      <div class="principle">
+        <strong class="zh">因时</strong>
+        <strong class="en">Time</strong>
+        <small class="zh">因时制宜</small>
+        <small class="en">Timing</small>
+      </div>
+      <div class="principle">
+        <strong class="zh">因地</strong>
+        <strong class="en">Place</strong>
+        <small class="zh">环境条件</small>
+        <small class="en">Context</small>
+      </div>
+    </div>
+
+    <div class="zh">
+      <p>
+        针法研究重视阴阳辨证与灵活施针。
+        目前主要集中于头面部美容施针领域。
+        全身其他部位的系统性应用仍处于
+        进一步研究与探索阶段。
+      </p>
+
+      <p>
+        本档案主要记录针法的研究背景、
+        文化源流与方法理念，不公开具体
+        施针操作程序。
+      </p>
+    </div>
+
+    <div class="en">
+      <p>
+        Her research draws on traditional yin–yang
+        differentiation and flexible approaches
+        to needling.
+      </p>
+
+      <p>
+        Current work focuses primarily on cosmetic
+        acupuncture of the face and head.
+        Systematic applications to other parts of
+        the body remain subjects of further study.
+      </p>
+
+      <p>
+        This archive documents the historical
+        background, research development, and
+        guiding concepts of her approach.
+        It does not provide procedural
+        acupuncture instructions.
+      </p>
+    </div>
+
+    <!-- 第二张真实照片 -->
+    <figure class="secondary-photo">
+      <img src="portrait-02.jpg"
+        alt="邹朝霞生活影像 / Zhaoxia Zou"
+        loading="lazy">
+    </figure>
+  </section>
+
+  <!-- 第四部分：联系 -->
+  <section id="contact">
+    <div class="section-number">04</div>
+
+    <div class="zh">
+      <h2>联系 · 交流</h2>
+      <p>
+        欢迎就中医针技术、传统针文化、
+        历史文献及相关研究进行交流。
+      </p>
+    </div>
+
+    <div class="en">
+      <h2>Contact & Correspondence</h2>
+      <p>
+        Correspondence concerning traditional
+        Chinese acupuncture, historical sources,
+        needling techniques, and cultural
+        research is welcome.
+      </p>
+    </div>
+
+    <div class="contact">
+      <div class="contact-label">EMAIL</div>
+      <p>
+        <a href="mailto:1197615439@qq.com">
+          1197615439@qq.com
+        </a>
+      </p>
+
+      <div class="contact-label">
+        UNITED KINGDOM
+      </div>
+      <p>
+        <span class="zh">英国 · 伦敦 · 格林威治</span>
+        <span class="en">
+          Greenwich, London, United Kingdom
+        </span>
+      </p>
+
+      <div class="contact-label">CHINA</div>
+      <p>
+        <span class="zh">
+          中国 · 山东省菏泽市 · 牡丹区
+        </span>
+        <span class="en">
+          Mudan District, Heze, Shandong, China
+        </span>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Zhaoxia Zou · Personal & Research Archive</div>
+  <div>Hosted by Goldisle Light Org</div>
+  <div>© <span id="year">2026</span></div>
+</footer>
+
+<script>
+function setLanguage(lang) {
+  const english = lang === "en";
+
+  document.body.classList.toggle("english", english);
+  document.documentElement.lang =
+    english ? "en" : "zh-CN";
+
+  document.getElementById("btn-zh")
+    .classList.toggle("active", !english);
+
+  document.getElementById("btn-en")
+    .classList.toggle("active", english);
+
+  document.getElementById("btn-zh")
+    .setAttribute("aria-pressed", String(!english));
+
+  document.getElementById("btn-en")
+    .setAttribute("aria-pressed", String(english));
+
+  document.title = english
+    ? "Zhaoxia Zou | Acupuncture Research"
+    : "邹朝霞 Zhaoxia Zou | 中医家学与针法研究";
+}
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+
+</body>
+</html>
